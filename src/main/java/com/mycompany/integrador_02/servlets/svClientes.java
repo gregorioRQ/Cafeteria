@@ -44,7 +44,7 @@ public class svClientes extends HttpServlet {
        String genero = request.getParameter("genero");
        String fecha = request.getParameter("fecha_nac");
        
-       
+        System.out.println(fecha);
        
        ArrayList<Pedido>pedido = new ArrayList();
        Cliente cli = new Cliente();      
@@ -54,7 +54,7 @@ public class svClientes extends HttpServlet {
        cli.setDni(dni);
        cli.setGenero(genero);
        cli.setTelefono(telefono);
-       cli.setFechNac(fechaNac);
+       cli.setFechNac(new Date());
        control.crearCliente(cli);
       response.sendRedirect("index.jsp");
     }
