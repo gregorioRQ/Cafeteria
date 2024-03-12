@@ -2,7 +2,12 @@
 package com.mycompany.integrador_02.logica;
 
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Empleado extends Persona {
     private String fechaIngreso;
     private String sueldo;

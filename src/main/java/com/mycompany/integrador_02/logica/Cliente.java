@@ -1,12 +1,13 @@
 
 package com.mycompany.integrador_02.logica;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 @Entity
-public class Cliente extends Persona {
+public class Cliente extends Persona implements Serializable {
     @OneToMany(mappedBy="cliente")
     private List<Pedido> pedidos;
 

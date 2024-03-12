@@ -1,10 +1,18 @@
 
 package com.mycompany.integrador_02.logica;
 
+import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-public class Mesa {
+@Entity
+public class Mesa implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private int capacidad;
     private boolean estaOcupada;
