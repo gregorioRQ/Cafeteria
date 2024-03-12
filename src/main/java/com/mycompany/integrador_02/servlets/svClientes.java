@@ -44,9 +44,7 @@ public class svClientes extends HttpServlet {
        String genero = request.getParameter("genero");
        String fecha = request.getParameter("fecha_nac");
        
-       String patronFecha = "dd-MM-yyyy";
-       SimpleDateFormat formatoFecha = new SimpleDateFormat(patronFecha);
-       Date fechaNac = formatoFecha.parse(fecha);
+       
        
        ArrayList<Pedido>pedido = new ArrayList();
        Cliente cli = new Cliente();      
