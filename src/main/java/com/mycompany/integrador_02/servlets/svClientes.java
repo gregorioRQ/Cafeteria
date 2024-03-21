@@ -5,6 +5,7 @@ import com.mycompany.integrador_02.logica.Cliente;
 import com.mycompany.integrador_02.logica.Pedido;
 import com.mycompany.integrador_02.persistencia.Controlador;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,10 +43,18 @@ public class svClientes extends HttpServlet {
        String dni = request.getParameter("dni");
        String telefono = request.getParameter("telefono");
        String genero = request.getParameter("genero");
-       String fecha = request.getParameter("fecha_nac");
-       
-        System.out.println(fecha);
-       
+      String fechaNacString = request.getParameter("fechaNac");
+      
+      
+       Date fechaNac = null;
+        try {  
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+            
+            fechaNac = formato.parse(fechaNacString);
+            
+            
+        } catch (ParseException e) {
+        }       
        ArrayList<Pedido>pedido = new ArrayList();
        Cliente cli = new Cliente();      
        cli.setPedidos(pedido);
@@ -54,7 +63,7 @@ public class svClientes extends HttpServlet {
        cli.setDni(dni);
        cli.setGenero(genero);
        cli.setTelefono(telefono);
-       cli.setFechNac(new Date());
+       cli.setFechNac(fechaNac);
        control.crearCliente(cli);
       response.sendRedirect("index.jsp");
     }

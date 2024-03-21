@@ -38,17 +38,15 @@
                            
                             <div class="col-lg-6">
                                 <div id="filterDate2">    
-                                  <div class="input-group date" data-date-format="dd/mm/yyyy">
-                                    <input  name="fecha_nac" id="date" type="text" class="form-control" placeholder="Nacimiento">
-                                    <div class="input-group-addon" >
-                                      <span class="glyphicon glyphicon-th"></span>
-                                    </div>
+                                  <div>
+                                    <input  name="fechaNac" id="date" type="date" class="form-control" placeholder="Nacimiento">
+                                    
                                   </div>
                                 </div>   
                             </div>
                             <div class="col-md-6 col-sm-12">
                               <fieldset>
-                                <select value="time" name="time" id="time">  
+                                <select  name="genero" id="time">  
                                     <option name="genero" id="masculino">Masculino</option>
                                     <option name="genero" id="femenino">Femenino</option>                                   
                                 </select>
