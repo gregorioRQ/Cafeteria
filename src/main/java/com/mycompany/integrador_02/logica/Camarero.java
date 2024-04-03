@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Camarero extends Empleado implements Serializable {
@@ -13,16 +14,28 @@ public class Camarero extends Empleado implements Serializable {
     private String mesasQueAtiende;
     @OneToMany(mappedBy = "camarero")
     private List<Pedido> pedidos;
+    @OneToOne
+    private Usuario usuario;
 
     public Camarero() {
     }
 
-    public Camarero(String zonaDeTrabajo, String mesasQueAtiende, List<Pedido> pedidos, String fechaIngreso, String sueldo, String diasTrabajo, String horariosTrabajo, int id, String nombre, String apellido, String dni, Date fechNac, String telefono, String genero) {
+    public Camarero(String zonaDeTrabajo, String mesasQueAtiende, List<Pedido> pedidos, String fechaIngreso, String sueldo, String diasTrabajo, String horariosTrabajo, int id, String nombre, String apellido, String dni, Date fechNac, String telefono, String genero, Usuario usuario) {
         super(fechaIngreso, sueldo, diasTrabajo, horariosTrabajo, id, nombre, apellido, dni, fechNac, telefono, genero);
         this.zonaDeTrabajo = zonaDeTrabajo;
         this.mesasQueAtiende = mesasQueAtiende;
         this.pedidos = pedidos;
+        this.usuario = usuario;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+    
 
     public String getZonaDeTrabajo() {
         return zonaDeTrabajo;

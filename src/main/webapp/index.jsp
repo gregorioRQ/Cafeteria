@@ -4,9 +4,19 @@
 <%@include file="componentes/header.jsp" %>
    
 <%@include file="componentes/menu.jsp" %>    
-    
-  
    
+     <!-- Validacion de la sesion para ingreso
+       esto valida si la sesion existe;
+       si el atributo usuario no existe significa que la persona no la creo
+       -->
+        <% HttpSession misesion =   request.getSession();
+      String usuario = (String) request.getSession().getAttribute("usuario");
+      
+      if(usuario == null){
+      response.sendRedirect("index2.jsp");
+    }
+   
+%>
 
     <!-- ***** Chefs Area Starts ***** -->
     <section class="section" id="chefs">
