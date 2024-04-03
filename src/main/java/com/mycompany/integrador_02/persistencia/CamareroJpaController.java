@@ -30,9 +30,10 @@ public class CamareroJpaController implements Serializable {
     private EntityManagerFactory emf = null;
 
     public CamareroJpaController() {
-        emf = Persistence.createEntityManagerFactory("int02JPAPU");
+         emf = Persistence.createEntityManagerFactory("int02JPAPU");
     }
 
+    
     
     public EntityManager getEntityManager() {
         return emf.createEntityManager();

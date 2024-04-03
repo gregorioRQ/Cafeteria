@@ -27,18 +27,19 @@ public class ClienteJpaController implements Serializable {
     public ClienteJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+
+    public ClienteJpaController() {
+         emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+    
+    
+    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
-    public ClienteJpaController() {
-         emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
-    
     public void create(Cliente cliente) {
         if (cliente.getPedidos() == null) {
             cliente.setPedidos(new ArrayList<Pedido>());

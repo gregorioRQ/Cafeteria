@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 @Entity
 public class Barista extends Empleado implements Serializable {
     private String variedadesDeCafe;
@@ -13,20 +14,30 @@ public class Barista extends Empleado implements Serializable {
     private String metodosDeExtraccion;
     @OneToMany(mappedBy="barista")
     private List<Producto> productos;
+    @OneToOne
+    private Usuario usuario;
+
 
     public Barista() {
     }
 
-    public Barista(String variedadesDeCafe, boolean habilidadArteLatte, String metodosDeExtraccion, List<Producto> productos, String fechaIngreso, String sueldo, String diasTrabajo, String horariosTrabajo, int id, String nombre, String apellido, String dni, Date fechNac, String telefono, String genero) {
+    public Barista(String variedadesDeCafe, boolean habilidadArteLatte, String metodosDeExtraccion, List<Producto> productos, Usuario usuario, String fechaIngreso, String sueldo, String diasTrabajo, String horariosTrabajo, int id, String nombre, String apellido, String dni, Date fechNac, String telefono, String genero) {
         super(fechaIngreso, sueldo, diasTrabajo, horariosTrabajo, id, nombre, apellido, dni, fechNac, telefono, genero);
         this.variedadesDeCafe = variedadesDeCafe;
         this.habilidadArteLatte = habilidadArteLatte;
         this.metodosDeExtraccion = metodosDeExtraccion;
         this.productos = productos;
+        this.usuario = usuario;
     }
 
-    
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+    
     public List<Producto> getProductos() {
         return productos;
     }

@@ -29,7 +29,7 @@ public class BaristaJpaController implements Serializable {
     }
 
     public BaristaJpaController() {
-        emf = Persistence.createEntityManagerFactory("int02JPAPU");
+         emf = Persistence.createEntityManagerFactory("int02JPAPU");
     }
     
     

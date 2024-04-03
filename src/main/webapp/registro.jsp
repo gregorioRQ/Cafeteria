@@ -16,7 +16,13 @@
         <title>Registro</title>
     </head>
     <body>
-       
+       <% HttpSession misesion =   request.getSession();
+      String usuario = (String) request.getSession().getAttribute("usuario");
+     
+      if(usuario == null){
+      response.sendRedirect("index2.jsp");
+    }
+%>
         <section>
             <div class="div_a">
                 <a class="a_div" href="index.jsp">Home</a>

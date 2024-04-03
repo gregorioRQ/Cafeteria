@@ -35,9 +35,8 @@ public class svClientes extends HttpServlet {
       clientes = control.traerClientes();
       HttpSession sesion = request.getSession();
       sesion.setAttribute("clientes", clientes);
-      response.sendRedirect("registro.jsp");
-     
-       
+      response.sendRedirect("svClientes");
+            
     }
 
     @Override
@@ -59,7 +58,7 @@ public class svClientes extends HttpServlet {
         } catch (ParseException e) {       }    
         
        ArrayList<Pedido>pedido = new ArrayList();
-       Cliente cli = new Cliente();      
+       Cliente cli = new Cliente();            
        cli.setPedidos(pedido);
        cli.setNombre(nombre);
        cli.setApellido(apellido);

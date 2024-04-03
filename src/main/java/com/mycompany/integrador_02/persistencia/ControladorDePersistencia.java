@@ -2,6 +2,7 @@
 package com.mycompany.integrador_02.persistencia;
 
 import com.mycompany.integrador_02.logica.Cliente;
+import com.mycompany.integrador_02.logica.Usuario;
 import com.mycompany.integrador_02.persistencia.exceptions.NonexistentEntityException;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,6 +17,7 @@ public class ControladorDePersistencia {
     PedidoJpaController pjpa = new PedidoJpaController();
     PersonaJpaController perjpa = new PersonaJpaController();
     ProductoJpaController projpa = new ProductoJpaController();
+    UsuarioJpaController usjpa = new UsuarioJpaController();
     
     public void crearCliente(Cliente cli){
         clijpa.create(cli);
@@ -43,6 +45,14 @@ public class ControladorDePersistencia {
         } catch (Exception ex) {
             Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    List<Usuario> trarUsuarios() {
+        return usjpa.findUsuarioEntities();  
+    }
+
+    public void crearUsuario(Usuario us) {
+        usjpa.create(us);
     }
     
 }
