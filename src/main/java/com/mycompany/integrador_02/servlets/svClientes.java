@@ -35,8 +35,8 @@ public class svClientes extends HttpServlet {
       clientes = control.traerClientes();
       HttpSession sesion = request.getSession();
       sesion.setAttribute("clientes", clientes);
-      response.sendRedirect("svClientes");
-            
+      response.sendRedirect("registro.jsp");
+      
     }
 
     @Override

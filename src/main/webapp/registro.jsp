@@ -20,7 +20,7 @@
       String usuario = (String) request.getSession().getAttribute("usuario");
      
       if(usuario == null){
-      response.sendRedirect("index2.jsp");
+      response.sendRedirect("index.jsp");
     }
 %>
         <section>
@@ -60,6 +60,7 @@
                     <button class="boton_form" type="submit">Guardar</button>
                 </form>
   
+ 
 
             <div class="cont_table">
                 <h2>Clientes registrados</h2>

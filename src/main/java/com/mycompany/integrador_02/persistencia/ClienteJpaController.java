@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.mycompany.integrador_02.persistencia;
 
 import com.mycompany.integrador_02.logica.Cliente;
@@ -18,10 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author rafae
- */
+
 public class ClienteJpaController implements Serializable {
 
     public ClienteJpaController(EntityManagerFactory emf) {
@@ -29,7 +23,7 @@ public class ClienteJpaController implements Serializable {
     }
 
     public ClienteJpaController() {
-         emf = Persistence.createEntityManagerFactory("int02JPAPU");
+        emf = Persistence.createEntityManagerFactory("int02JPAPU");
     }
     
     
