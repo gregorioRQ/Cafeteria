@@ -8,6 +8,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <h1>Edite el cliente</h1>
         <% Cliente cli = (Cliente) request.getSession().getAttribute("clienteEditar"); %>
         <form action="svEditarCliente" method="POST">
                <fieldset>
