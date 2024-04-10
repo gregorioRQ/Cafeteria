@@ -22,6 +22,12 @@ import javax.persistence.criteria.Root;
  */
 public class PersonaJpaController implements Serializable {
 
+    public PersonaJpaController() {
+         emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+
+    
+    
     public PersonaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
@@ -29,10 +35,6 @@ public class PersonaJpaController implements Serializable {
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
-    }
-
-    public PersonaJpaController() {
-         emf = Persistence.createEntityManagerFactory("int02JPAPU");
     }
 
     public void create(Persona persona) {

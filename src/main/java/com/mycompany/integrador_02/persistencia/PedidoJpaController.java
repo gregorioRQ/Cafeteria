@@ -9,7 +9,6 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import com.mycompany.integrador_02.logica.Mesa;
 import com.mycompany.integrador_02.logica.Camarero;
 import com.mycompany.integrador_02.logica.Cliente;
 import com.mycompany.integrador_02.logica.Pedido;
@@ -27,6 +26,11 @@ import javax.persistence.Persistence;
  */
 public class PedidoJpaController implements Serializable {
 
+    public PedidoJpaController() {
+         emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+
+    
     public PedidoJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
@@ -36,11 +40,6 @@ public class PedidoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public PedidoJpaController() {
-         emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
     public void create(Pedido pedido) {
         if (pedido.getProductos() == null) {
             pedido.setProductos(new ArrayList<Producto>());
@@ -49,11 +48,6 @@ public class PedidoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Mesa mesa = pedido.getMesa();
-            if (mesa != null) {
-                mesa = em.getReference(mesa.getClass(), mesa.getId());
-                pedido.setMesa(mesa);
-            }
             Camarero camarero = pedido.getCamarero();
             if (camarero != null) {
                 camarero = em.getReference(camarero.getClass(), camarero.getId());
@@ -71,10 +65,6 @@ public class PedidoJpaController implements Serializable {
             }
             pedido.setProductos(attachedProductos);
             em.persist(pedido);
-            if (mesa != null) {
-                mesa.getPedidos().add(pedido);
-                mesa = em.merge(mesa);
-            }
             if (camarero != null) {
                 camarero.getPedidos().add(pedido);
                 camarero = em.merge(camarero);
@@ -101,18 +91,12 @@ public class PedidoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Pedido persistentPedido = em.find(Pedido.class, pedido.getId());
-            Mesa mesaOld = persistentPedido.getMesa();
-            Mesa mesaNew = pedido.getMesa();
             Camarero camareroOld = persistentPedido.getCamarero();
             Camarero camareroNew = pedido.getCamarero();
             Cliente clienteOld = persistentPedido.getCliente();
             Cliente clienteNew = pedido.getCliente();
             List<Producto> productosOld = persistentPedido.getProductos();
             List<Producto> productosNew = pedido.getProductos();
-            if (mesaNew != null) {
-                mesaNew = em.getReference(mesaNew.getClass(), mesaNew.getId());
-                pedido.setMesa(mesaNew);
-            }
             if (camareroNew != null) {
                 camareroNew = em.getReference(camareroNew.getClass(), camareroNew.getId());
                 pedido.setCamarero(camareroNew);
@@ -129,14 +113,6 @@ public class PedidoJpaController implements Serializable {
             productosNew = attachedProductosNew;
             pedido.setProductos(productosNew);
             pedido = em.merge(pedido);
-            if (mesaOld != null && !mesaOld.equals(mesaNew)) {
-                mesaOld.getPedidos().remove(pedido);
-                mesaOld = em.merge(mesaOld);
-            }
-            if (mesaNew != null && !mesaNew.equals(mesaOld)) {
-                mesaNew.getPedidos().add(pedido);
-                mesaNew = em.merge(mesaNew);
-            }
             if (camareroOld != null && !camareroOld.equals(camareroNew)) {
                 camareroOld.getPedidos().remove(pedido);
                 camareroOld = em.merge(camareroOld);
@@ -193,11 +169,6 @@ public class PedidoJpaController implements Serializable {
                 pedido.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The pedido with id " + id + " no longer exists.", enfe);
-            }
-            Mesa mesa = pedido.getMesa();
-            if (mesa != null) {
-                mesa.getPedidos().remove(pedido);
-                mesa = em.merge(mesa);
             }
             Camarero camarero = pedido.getCamarero();
             if (camarero != null) {

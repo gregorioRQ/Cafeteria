@@ -27,9 +27,6 @@ public class Pedido implements Serializable {
     @JoinColumn(name="id_cliente")
     private Cliente cliente;
     @ManyToOne
-    @JoinColumn(name="id_mesa")
-    private Mesa mesa;
-    @ManyToOne
     @JoinColumn(name="id_camarero")
     private Camarero camarero;
     @ManyToMany(mappedBy="pedidos")
@@ -38,23 +35,14 @@ public class Pedido implements Serializable {
     public Pedido() {
     }
 
-    public Pedido(int id, String hora, Date fecha, String estado, Cliente cliente, Mesa mesa, Camarero camarero, List<Producto> productos) {
+    public Pedido(int id, String hora, Date fecha, String estado, Cliente cliente, Camarero camarero, List<Producto> productos) {
         this.id = id;
         this.hora = hora;
         this.fecha = fecha;
         this.estado = estado;
         this.cliente = cliente;
-        this.mesa = mesa;
         this.camarero = camarero;
         this.productos = productos;
-    }
-
-    public Mesa getMesa() {
-        return mesa;
-    }
-
-    public void setMesa(Mesa mesa) {
-        this.mesa = mesa;
     }
 
     public Camarero getCamarero() {

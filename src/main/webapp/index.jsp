@@ -12,7 +12,7 @@
     
     <body>
 <%@include file="componentes/header.jsp" %>
-<%@include file="componentes/camarero/listaMesas.jsp" %>
+<%@include file="componentes/camarero/pedidos.jsp" %>
 <h1>INICIO DE LA APP</h1>
    
    

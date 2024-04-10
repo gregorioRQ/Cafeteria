@@ -26,8 +26,6 @@ public class Producto implements Serializable {
     @ManyToMany
     @JoinTable(name="producto_id")
     private List<Pedido> pedidos;
-    @OneToMany(mappedBy="producto")
-    private List<Ingrediente> ingredientes;
     @ManyToOne
     @JoinColumn(name ="producto_id")
     private Barista barista;
@@ -35,7 +33,7 @@ public class Producto implements Serializable {
     public Producto() {
     }
 
-    public Producto(int id, String nombre, String descripcion, String precio, boolean estaDisponible, String categoria, List<Pedido> pedidos, List<Ingrediente> ingredientes, Barista barista) {
+    public Producto(int id, String nombre, String descripcion, String precio, boolean estaDisponible, String categoria, List<Pedido> pedidos, Barista barista) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -43,7 +41,6 @@ public class Producto implements Serializable {
         this.estaDisponible = estaDisponible;
         this.categoria = categoria;
         this.pedidos = pedidos;
-        this.ingredientes = ingredientes;
         this.barista = barista;
     }
 
@@ -113,15 +110,4 @@ public class Producto implements Serializable {
         this.pedidos = pedidos;
     }
 
-    public List<Ingrediente> getIngredientes() {
-        return ingredientes;
-    }
-
-    public void setIngredientes(List<Ingrediente> ingredientes) {
-        this.ingredientes = ingredientes;
-    }
-    
-    
-    
-    
 }
