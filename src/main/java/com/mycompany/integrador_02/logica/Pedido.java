@@ -2,96 +2,74 @@
 package com.mycompany.integrador_02.logica;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.OneToMany;
+
 
 @Entity
 public class Pedido implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String hora;
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
-    private String estado;
-    @ManyToOne
-    @JoinColumn(name="id_cliente")
-    private Cliente cliente;
-    @ManyToOne
-    @JoinColumn(name="id_camarero")
-    private Camarero camarero;
-    @ManyToMany(mappedBy="pedidos")
+    private int numMesa;
+    private boolean fueAtendido;
+    @OneToMany(mappedBy="unPedido")
     private List<Producto> productos;
+    @ManyToOne
+    @JoinColumn(name="fk_camarero")
+    private Camarero unCamarero;
 
     public Pedido() {
     }
 
-    public Pedido(int id, String hora, Date fecha, String estado, Cliente cliente, Camarero camarero, List<Producto> productos) {
+    public Pedido(int id, int numMesa, boolean fueAtendido, List<Producto> productos, Camarero unCamarero) {
         this.id = id;
-        this.hora = hora;
-        this.fecha = fecha;
-        this.estado = estado;
-        this.cliente = cliente;
-        this.camarero = camarero;
+        this.numMesa = numMesa;
+        this.fueAtendido = fueAtendido;
         this.productos = productos;
+        this.unCamarero = unCamarero;
     }
 
-    public Camarero getCamarero() {
-        return camarero;
+    
+
+    public Camarero getUnCamarero() {
+        return unCamarero;
     }
 
-    public void setCamarero(Camarero camarero) {
-        this.camarero = camarero;
+    public void setUnCamarero(Camarero unCamarero) {
+        this.unCamarero = unCamarero;
     }
 
-  
+    public int getNumMesa() {
+        return numMesa;
+    }
+
+    public void setNumMesa(int numMesa) {
+        this.numMesa = numMesa;
+    }
+
+    public boolean isFueAtendido() {
+        return fueAtendido;
+    }
+
+    public void setFueAtendido(boolean fueAtendido) {
+        this.fueAtendido = fueAtendido;
+    }
+
+    
+    
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getHora() {
-        return hora;
-    }
-
-    public void setHora(String hora) {
-        this.hora = hora;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
     }
 
     public List<Producto> getProductos() {

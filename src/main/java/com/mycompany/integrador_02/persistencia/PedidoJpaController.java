@@ -10,7 +10,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.mycompany.integrador_02.logica.Camarero;
-import com.mycompany.integrador_02.logica.Cliente;
 import com.mycompany.integrador_02.logica.Pedido;
 import com.mycompany.integrador_02.logica.Producto;
 import com.mycompany.integrador_02.persistencia.exceptions.NonexistentEntityException;
@@ -26,14 +25,14 @@ import javax.persistence.Persistence;
  */
 public class PedidoJpaController implements Serializable {
 
-    public PedidoJpaController() {
-         emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
     public PedidoJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+
+    public PedidoJpaController() {
+        emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -48,15 +47,10 @@ public class PedidoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Camarero camarero = pedido.getCamarero();
-            if (camarero != null) {
-                camarero = em.getReference(camarero.getClass(), camarero.getId());
-                pedido.setCamarero(camarero);
-            }
-            Cliente cliente = pedido.getCliente();
-            if (cliente != null) {
-                cliente = em.getReference(cliente.getClass(), cliente.getId());
-                pedido.setCliente(cliente);
+            Camarero unCamarero = pedido.getUnCamarero();
+            if (unCamarero != null) {
+                unCamarero = em.getReference(unCamarero.getClass(), unCamarero.getId());
+                pedido.setUnCamarero(unCamarero);
             }
             List<Producto> attachedProductos = new ArrayList<Producto>();
             for (Producto productosProductoToAttach : pedido.getProductos()) {
@@ -65,17 +59,18 @@ public class PedidoJpaController implements Serializable {
             }
             pedido.setProductos(attachedProductos);
             em.persist(pedido);
-            if (camarero != null) {
-                camarero.getPedidos().add(pedido);
-                camarero = em.merge(camarero);
-            }
-            if (cliente != null) {
-                cliente.getPedidos().add(pedido);
-                cliente = em.merge(cliente);
+            if (unCamarero != null) {
+                unCamarero.getPedidos().add(pedido);
+                unCamarero = em.merge(unCamarero);
             }
             for (Producto productosProducto : pedido.getProductos()) {
-                productosProducto.getPedidos().add(pedido);
+                Pedido oldUnPedidoOfProductosProducto = productosProducto.getUnPedido();
+                productosProducto.setUnPedido(pedido);
                 productosProducto = em.merge(productosProducto);
+                if (oldUnPedidoOfProductosProducto != null) {
+                    oldUnPedidoOfProductosProducto.getProductos().remove(productosProducto);
+                    oldUnPedidoOfProductosProducto = em.merge(oldUnPedidoOfProductosProducto);
+                }
             }
             em.getTransaction().commit();
         } finally {
@@ -91,19 +86,13 @@ public class PedidoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Pedido persistentPedido = em.find(Pedido.class, pedido.getId());
-            Camarero camareroOld = persistentPedido.getCamarero();
-            Camarero camareroNew = pedido.getCamarero();
-            Cliente clienteOld = persistentPedido.getCliente();
-            Cliente clienteNew = pedido.getCliente();
+            Camarero unCamareroOld = persistentPedido.getUnCamarero();
+            Camarero unCamareroNew = pedido.getUnCamarero();
             List<Producto> productosOld = persistentPedido.getProductos();
             List<Producto> productosNew = pedido.getProductos();
-            if (camareroNew != null) {
-                camareroNew = em.getReference(camareroNew.getClass(), camareroNew.getId());
-                pedido.setCamarero(camareroNew);
-            }
-            if (clienteNew != null) {
-                clienteNew = em.getReference(clienteNew.getClass(), clienteNew.getId());
-                pedido.setCliente(clienteNew);
+            if (unCamareroNew != null) {
+                unCamareroNew = em.getReference(unCamareroNew.getClass(), unCamareroNew.getId());
+                pedido.setUnCamarero(unCamareroNew);
             }
             List<Producto> attachedProductosNew = new ArrayList<Producto>();
             for (Producto productosNewProductoToAttach : productosNew) {
@@ -113,32 +102,29 @@ public class PedidoJpaController implements Serializable {
             productosNew = attachedProductosNew;
             pedido.setProductos(productosNew);
             pedido = em.merge(pedido);
-            if (camareroOld != null && !camareroOld.equals(camareroNew)) {
-                camareroOld.getPedidos().remove(pedido);
-                camareroOld = em.merge(camareroOld);
+            if (unCamareroOld != null && !unCamareroOld.equals(unCamareroNew)) {
+                unCamareroOld.getPedidos().remove(pedido);
+                unCamareroOld = em.merge(unCamareroOld);
             }
-            if (camareroNew != null && !camareroNew.equals(camareroOld)) {
-                camareroNew.getPedidos().add(pedido);
-                camareroNew = em.merge(camareroNew);
-            }
-            if (clienteOld != null && !clienteOld.equals(clienteNew)) {
-                clienteOld.getPedidos().remove(pedido);
-                clienteOld = em.merge(clienteOld);
-            }
-            if (clienteNew != null && !clienteNew.equals(clienteOld)) {
-                clienteNew.getPedidos().add(pedido);
-                clienteNew = em.merge(clienteNew);
+            if (unCamareroNew != null && !unCamareroNew.equals(unCamareroOld)) {
+                unCamareroNew.getPedidos().add(pedido);
+                unCamareroNew = em.merge(unCamareroNew);
             }
             for (Producto productosOldProducto : productosOld) {
                 if (!productosNew.contains(productosOldProducto)) {
-                    productosOldProducto.getPedidos().remove(pedido);
+                    productosOldProducto.setUnPedido(null);
                     productosOldProducto = em.merge(productosOldProducto);
                 }
             }
             for (Producto productosNewProducto : productosNew) {
                 if (!productosOld.contains(productosNewProducto)) {
-                    productosNewProducto.getPedidos().add(pedido);
+                    Pedido oldUnPedidoOfProductosNewProducto = productosNewProducto.getUnPedido();
+                    productosNewProducto.setUnPedido(pedido);
                     productosNewProducto = em.merge(productosNewProducto);
+                    if (oldUnPedidoOfProductosNewProducto != null && !oldUnPedidoOfProductosNewProducto.equals(pedido)) {
+                        oldUnPedidoOfProductosNewProducto.getProductos().remove(productosNewProducto);
+                        oldUnPedidoOfProductosNewProducto = em.merge(oldUnPedidoOfProductosNewProducto);
+                    }
                 }
             }
             em.getTransaction().commit();
@@ -170,19 +156,14 @@ public class PedidoJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The pedido with id " + id + " no longer exists.", enfe);
             }
-            Camarero camarero = pedido.getCamarero();
-            if (camarero != null) {
-                camarero.getPedidos().remove(pedido);
-                camarero = em.merge(camarero);
-            }
-            Cliente cliente = pedido.getCliente();
-            if (cliente != null) {
-                cliente.getPedidos().remove(pedido);
-                cliente = em.merge(cliente);
+            Camarero unCamarero = pedido.getUnCamarero();
+            if (unCamarero != null) {
+                unCamarero.getPedidos().remove(pedido);
+                unCamarero = em.merge(unCamarero);
             }
             List<Producto> productos = pedido.getProductos();
             for (Producto productosProducto : productos) {
-                productosProducto.getPedidos().remove(pedido);
+                productosProducto.setUnPedido(null);
                 productosProducto = em.merge(productosProducto);
             }
             em.remove(pedido);

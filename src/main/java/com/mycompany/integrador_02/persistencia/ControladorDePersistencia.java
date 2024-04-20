@@ -1,9 +1,14 @@
 
 package com.mycompany.integrador_02.persistencia;
 
-import com.mycompany.integrador_02.logica.Cliente;
+import com.mycompany.integrador_02.logica.Administrador;
+import com.mycompany.integrador_02.logica.Barista;
+import com.mycompany.integrador_02.logica.Camarero;
+import com.mycompany.integrador_02.logica.Pedido;
+import com.mycompany.integrador_02.logica.Producto;
 import com.mycompany.integrador_02.logica.Usuario;
 import com.mycompany.integrador_02.persistencia.exceptions.NonexistentEntityException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,46 +16,135 @@ import java.util.logging.Logger;
 public class ControladorDePersistencia {
     BaristaJpaController bjpa = new BaristaJpaController();
     CamareroJpaController cjpa = new CamareroJpaController();
-    ClienteJpaController clijpa = new ClienteJpaController();
-    PedidoJpaController pjpa = new PedidoJpaController();
     PersonaJpaController perjpa = new PersonaJpaController();
     ProductoJpaController projpa = new ProductoJpaController();
     UsuarioJpaController usjpa = new UsuarioJpaController();
-    
-    public void crearCliente(Cliente cli){
-        clijpa.create(cli);
-    }
-
-    public List<Cliente> traerClientes() {
-       return clijpa.findClienteEntities();
-    }
-
-    void eliminarCliente(int id_cliente) {
-        try {
-            clijpa.destroy(id_cliente);
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    Cliente buscarCliente(int id_clienteEdit) {
-       return clijpa.findCliente(id_clienteEdit);
-    }
-
-    void editarCliente(Cliente cli) {
-        try {
-            clijpa.edit(cli);
-        } catch (Exception ex) {
-            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    AdministradorJpaController adjpa = new AdministradorJpaController();
+    PedidoJpaController pedjpa = new PedidoJpaController();
 
     List<Usuario> trarUsuarios() {
-        return usjpa.findUsuarioEntities();  
+        List<Usuario>usuarios = usjpa.findUsuarioEntities();
+        ArrayList<Usuario> usuarios2 = new ArrayList<>(usuarios);
+        return usuarios2;
+        
     }
 
     public void crearUsuario(Usuario us) {
         usjpa.create(us);
     }
+
+    void crearAdmin(Administrador ad) {
+        adjpa.create(ad);
+    }
+
+    void eliminarUsuario(int idUsu) {
+        try {
+            usjpa.destroy(idUsu);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void crearProducto(Producto p) {
+        projpa.create(p);
+    }
+
+    void crearBarista(Barista b) {
+       bjpa.create(b);
+    }
+
+    void editarBarista(Barista b) {
+        try {
+            bjpa.edit(b);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void editarUsuario(Usuario usu) {
+        try {
+            usjpa.edit(usu);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    List<Producto> buscarProductos() {
+        return projpa.findProductoEntities();
+    }
+
+    void crearPedido(Pedido p) {
+       pedjpa.create(p);
+    }
+
+    public Camarero buscarCamarero(int id) {
+        return cjpa.findCamarero(id);
+    }
+
+    void editarPedido(Pedido pedido) {
+       try {
+            pedjpa.edit(pedido);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    Producto buscarProducto(int id_producto) {
+       return projpa.findProducto(id_producto);
+    }
+
+    Usuario buscarUsuario(int id_usuario) {
+       return usjpa.findUsuario(id_usuario);
+    }
+
+    void crearCamarero(Camarero camarero) {
+        cjpa.create(camarero);
+    }
+
+    public List<Pedido> buscarPedidos() {
+       return pedjpa.findPedidoEntities();
+    }
+
+    void eliminarPedido(int idPedido) {
+        try {
+            pedjpa.destroy(idPedido);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void eliminarBarista(int id) {
+        try {
+            bjpa.destroy(id);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void eliminarCamarero(int id) {
+        try {
+            cjpa.destroy(id);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void eliminarProducto(int idProducto) {
+        try {
+            projpa.destroy(idProducto);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    List<Barista> buscarBaristas() {
+       return bjpa.findBaristaEntities();
+    }
+
+    Barista buscarBaristaPorId(int i) {
+        return bjpa.findBarista(i);
+    }
+
+
     
 }

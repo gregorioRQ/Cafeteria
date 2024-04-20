@@ -22,16 +22,16 @@ import javax.persistence.criteria.Root;
  */
 public class EmpleadoJpaController implements Serializable {
 
-    public EmpleadoJpaController() {
-         emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
     public EmpleadoJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
 
+    public EmpleadoJpaController() {
+        emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+
+    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }

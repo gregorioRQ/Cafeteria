@@ -3,7 +3,6 @@
 <%@page import="java.text.ParseException"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="com.mycompany.integrador_02.logica.Cliente"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -16,7 +15,14 @@
         <title>Registro</title>
     </head>
     <body>
-       <% HttpSession misesion =   request.getSession();
+        
+       <%
+           /*
+        Con este procedimiento el sistema verifica si existe una sesion.
+           en el caso de que exista permite al usuario ver el html
+           en el caso que no exista se lo redirije hacia la pagina principal.
+        */
+      HttpSession misesion =   request.getSession();
       String usuario = (String) request.getSession().getAttribute("usuario");
      
       if(usuario == null){
@@ -29,7 +35,7 @@
             </div>
          
 
-                <form class="formulario" id="contact" action="svClientes" method="POST">
+                <form class="formulario" id="contact" action="" method="POST">
                     <fieldset class="fielset_form">
                         <legend>Datos principales</legend>
                         <label for="nombre">Nombre del cliente</label>
@@ -79,35 +85,35 @@
                     </thead>
                     <tbody>
                      <%                      
-                    List<Cliente> clientes = (List) request.getSession().getAttribute("clientes");
+                   /* List<Cliente> clientes = (List) request.getSession().getAttribute("clientes");
                     if (clientes != null) {
                         for (Cliente cli : clientes) {
                            Date fechaEmision = cli.getFechNac();
                            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-                           String fechaFormateada = formatoFecha.format(fechaEmision);
+                           String fechaFormateada = formatoFecha.format(fechaEmision);*/
                      %> 
                         <tr>
-                            <td><%=cli.getNombre()%></td>
-                            <td><%=cli.getApellido()%></td>
-                            <td><%=cli.getTelefono()%></td>
-                            <td><%=cli.getGenero()%></td>
-                            <td><%=fechaFormateada%></td>
-                            <td><%= cli.getDni() %></td>
+                            <td><%=//cli.getNombre()%></td>
+                            <td><%=//cli.getApellido()%></td>
+                            <td><%=//cli.getTelefono()%></td>
+                            <td><%=//cli.getGenero()%></td>
+                            <td><%=//fechaFormateada%></td>
+                            <td><%=// cli.getDni() %></td>
                             <td>
                                 <form action="svEditarCliente" method="GET">
-                                    <input type="hidden" value="<%= cli.getId()%>" name="id_clienteEdit">
+                                    <input type="hidden" value="<%=// cli.getId()%>" name="id_clienteEdit">
                                     <button type="submit">Editar</button>
                                 </form>
                             </td>
                             <td>
                                 <form action="svEliminarCliente" method="POST">
-                                    <input type="hidden" value="<%= cli.getId()%>" name="id_cliente">    
+                                    <input type="hidden" value="<%=// cli.getId()%>" name="id_cliente">    
                                     <button class="td_form_boton-eliminar" type="submit">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
                           <% }
-                  }%> 
+                //  }%> 
                     </tbody>
                 </table>  
          

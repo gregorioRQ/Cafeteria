@@ -4,15 +4,13 @@
   <persistence-unit name="int02JPAPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.mycompany.integrador_02.logica.Barista</class>
-    <class>com.mycompany.integrador_02.logica.Cliente</class>
-    <class>com.mycompany.integrador_02.logica.Ingrediente</class>
     <class>com.mycompany.integrador_02.logica.Persona</class>
     <class>com.mycompany.integrador_02.logica.Producto</class>
     <class>com.mycompany.integrador_02.logica.Camarero</class>
-    <class>com.mycompany.integrador_02.logica.Mesa</class>
     <class>com.mycompany.integrador_02.logica.Pedido</class>
     <class>com.mycompany.integrador_02.logica.Empleado</class>
     <class>com.mycompany.integrador_02.logica.Usuario</class>
+    <class>com.mycompany.integrador_02.logica.Administrador</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/cafeteria?serverTimezone=UTC"/>

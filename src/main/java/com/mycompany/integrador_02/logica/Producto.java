@@ -2,16 +2,12 @@
 package com.mycompany.integrador_02.logica;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Producto implements Serializable {
@@ -23,36 +19,44 @@ public class Producto implements Serializable {
     private String precio;
     private boolean estaDisponible;
     private String categoria;
-    @ManyToMany
-    @JoinTable(name="producto_id")
-    private List<Pedido> pedidos;
     @ManyToOne
-    @JoinColumn(name ="producto_id")
-    private Barista barista;
+    @JoinColumn(name="fk_pedidos")
+    private Pedido unPedido;
+    @ManyToOne
+    @JoinColumn(name ="fk_barista")
+    private Barista unBarista;
+ 
 
     public Producto() {
     }
 
-    public Producto(int id, String nombre, String descripcion, String precio, boolean estaDisponible, String categoria, List<Pedido> pedidos, Barista barista) {
+    public Producto(int id, String nombre, String descripcion, String precio, boolean estaDisponible, String categoria, Pedido unPedido, Barista unBarista) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.estaDisponible = estaDisponible;
         this.categoria = categoria;
-        this.pedidos = pedidos;
-        this.barista = barista;
+        this.unPedido = unPedido;
+        this.unBarista = unBarista;
     }
 
-    public Barista getBarista() {
-        return barista;
+    public Pedido getUnPedido() {
+        return unPedido;
     }
 
-    public void setBarista(Barista barista) {
-        this.barista = barista;
+    public void setUnPedido(Pedido unPedido) {
+        this.unPedido = unPedido;
     }
 
-  
+    public Barista getUnBarista() {
+        return unBarista;
+    }
+
+    public void setUnBarista(Barista unBarista) {
+        this.unBarista = unBarista;
+    }
+
 
     public int getId() {
         return id;
@@ -102,12 +106,5 @@ public class Producto implements Serializable {
         this.categoria = categoria;
     }
 
-    public List<Pedido> getPedidos() {
-        return pedidos;
-    }
-
-    public void setPedidos(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
-    }
 
 }

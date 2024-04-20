@@ -11,8 +11,8 @@
         <form action="svPedidos" method="POST">
             <h2>Añada un pedido </h2>
             <fieldset>
-                <legend>Datos de la mesa</legend>
-                <label for="capacidad">Capacidad</label>
+                <legend>Datos del pedido</legend>
+                <label for="hora">Capacidad</label>
                 <input type="text" name="capacidad" id="capacidad" required="">
                 <br>
                 <label for="ocupada">La mesa esta ocupada?</label>
@@ -22,6 +22,13 @@
                 <input type="radio" name="ubicacion" id="ubicacion" required="" value="hola">
                 
             </fieldset>
+            <fieldset>
+                <legend>Producto</legend>
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre">
+                
+            </fieldset>
+            
             <button type="submit">Añadir</button>
         </form>
         <h1>lista de mesas </h1>

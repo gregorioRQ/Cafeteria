@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import com.mycompany.integrador_02.logica.Usuario;
 import com.mycompany.integrador_02.logica.Producto;
 import com.mycompany.integrador_02.persistencia.exceptions.NonexistentEntityException;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ public class BaristaJpaController implements Serializable {
     }
     
     
-    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -48,6 +48,11 @@ public class BaristaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Usuario unUsuario = barista.getUnUsuario();
+            if (unUsuario != null) {
+                unUsuario = em.getReference(unUsuario.getClass(), unUsuario.getId());
+                barista.setUnUsuario(unUsuario);
+            }
             List<Producto> attachedProductos = new ArrayList<Producto>();
             for (Producto productosProductoToAttach : barista.getProductos()) {
                 productosProductoToAttach = em.getReference(productosProductoToAttach.getClass(), productosProductoToAttach.getId());
@@ -55,13 +60,22 @@ public class BaristaJpaController implements Serializable {
             }
             barista.setProductos(attachedProductos);
             em.persist(barista);
+            if (unUsuario != null) {
+                Barista oldUnBaristaOfUnUsuario = unUsuario.getUnBarista();
+                if (oldUnBaristaOfUnUsuario != null) {
+                    oldUnBaristaOfUnUsuario.setUnUsuario(null);
+                    oldUnBaristaOfUnUsuario = em.merge(oldUnBaristaOfUnUsuario);
+                }
+                unUsuario.setUnBarista(barista);
+                unUsuario = em.merge(unUsuario);
+            }
             for (Producto productosProducto : barista.getProductos()) {
-                Barista oldBaristaOfProductosProducto = productosProducto.getBarista();
-                productosProducto.setBarista(barista);
+                Barista oldUnBaristaOfProductosProducto = productosProducto.getUnBarista();
+                productosProducto.setUnBarista(barista);
                 productosProducto = em.merge(productosProducto);
-                if (oldBaristaOfProductosProducto != null) {
-                    oldBaristaOfProductosProducto.getProductos().remove(productosProducto);
-                    oldBaristaOfProductosProducto = em.merge(oldBaristaOfProductosProducto);
+                if (oldUnBaristaOfProductosProducto != null) {
+                    oldUnBaristaOfProductosProducto.getProductos().remove(productosProducto);
+                    oldUnBaristaOfProductosProducto = em.merge(oldUnBaristaOfProductosProducto);
                 }
             }
             em.getTransaction().commit();
@@ -78,8 +92,14 @@ public class BaristaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Barista persistentBarista = em.find(Barista.class, barista.getId());
+            Usuario unUsuarioOld = persistentBarista.getUnUsuario();
+            Usuario unUsuarioNew = barista.getUnUsuario();
             List<Producto> productosOld = persistentBarista.getProductos();
             List<Producto> productosNew = barista.getProductos();
+            if (unUsuarioNew != null) {
+                unUsuarioNew = em.getReference(unUsuarioNew.getClass(), unUsuarioNew.getId());
+                barista.setUnUsuario(unUsuarioNew);
+            }
             List<Producto> attachedProductosNew = new ArrayList<Producto>();
             for (Producto productosNewProductoToAttach : productosNew) {
                 productosNewProductoToAttach = em.getReference(productosNewProductoToAttach.getClass(), productosNewProductoToAttach.getId());
@@ -88,20 +108,33 @@ public class BaristaJpaController implements Serializable {
             productosNew = attachedProductosNew;
             barista.setProductos(productosNew);
             barista = em.merge(barista);
+            if (unUsuarioOld != null && !unUsuarioOld.equals(unUsuarioNew)) {
+                unUsuarioOld.setUnBarista(null);
+                unUsuarioOld = em.merge(unUsuarioOld);
+            }
+            if (unUsuarioNew != null && !unUsuarioNew.equals(unUsuarioOld)) {
+                Barista oldUnBaristaOfUnUsuario = unUsuarioNew.getUnBarista();
+                if (oldUnBaristaOfUnUsuario != null) {
+                    oldUnBaristaOfUnUsuario.setUnUsuario(null);
+                    oldUnBaristaOfUnUsuario = em.merge(oldUnBaristaOfUnUsuario);
+                }
+                unUsuarioNew.setUnBarista(barista);
+                unUsuarioNew = em.merge(unUsuarioNew);
+            }
             for (Producto productosOldProducto : productosOld) {
                 if (!productosNew.contains(productosOldProducto)) {
-                    productosOldProducto.setBarista(null);
+                    productosOldProducto.setUnBarista(null);
                     productosOldProducto = em.merge(productosOldProducto);
                 }
             }
             for (Producto productosNewProducto : productosNew) {
                 if (!productosOld.contains(productosNewProducto)) {
-                    Barista oldBaristaOfProductosNewProducto = productosNewProducto.getBarista();
-                    productosNewProducto.setBarista(barista);
+                    Barista oldUnBaristaOfProductosNewProducto = productosNewProducto.getUnBarista();
+                    productosNewProducto.setUnBarista(barista);
                     productosNewProducto = em.merge(productosNewProducto);
-                    if (oldBaristaOfProductosNewProducto != null && !oldBaristaOfProductosNewProducto.equals(barista)) {
-                        oldBaristaOfProductosNewProducto.getProductos().remove(productosNewProducto);
-                        oldBaristaOfProductosNewProducto = em.merge(oldBaristaOfProductosNewProducto);
+                    if (oldUnBaristaOfProductosNewProducto != null && !oldUnBaristaOfProductosNewProducto.equals(barista)) {
+                        oldUnBaristaOfProductosNewProducto.getProductos().remove(productosNewProducto);
+                        oldUnBaristaOfProductosNewProducto = em.merge(oldUnBaristaOfProductosNewProducto);
                     }
                 }
             }
@@ -134,9 +167,14 @@ public class BaristaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The barista with id " + id + " no longer exists.", enfe);
             }
+            Usuario unUsuario = barista.getUnUsuario();
+            if (unUsuario != null) {
+                unUsuario.setUnBarista(null);
+                unUsuario = em.merge(unUsuario);
+            }
             List<Producto> productos = barista.getProductos();
             for (Producto productosProducto : productos) {
-                productosProducto.setBarista(null);
+                productosProducto.setUnBarista(null);
                 productosProducto = em.merge(productosProducto);
             }
             em.remove(barista);

@@ -9,11 +9,10 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import com.mycompany.integrador_02.logica.Barista;
 import com.mycompany.integrador_02.logica.Pedido;
+import com.mycompany.integrador_02.logica.Barista;
 import com.mycompany.integrador_02.logica.Producto;
 import com.mycompany.integrador_02.persistencia.exceptions.NonexistentEntityException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -25,47 +24,43 @@ import javax.persistence.Persistence;
  */
 public class ProductoJpaController implements Serializable {
 
-    public ProductoJpaController() {
-         emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
     public ProductoJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
 
+    public ProductoJpaController() {
+        emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+
+    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
     public void create(Producto producto) {
-        if (producto.getPedidos() == null) {
-            producto.setPedidos(new ArrayList<Pedido>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Barista barista = producto.getBarista();
-            if (barista != null) {
-                barista = em.getReference(barista.getClass(), barista.getId());
-                producto.setBarista(barista);
+            Pedido unPedido = producto.getUnPedido();
+            if (unPedido != null) {
+                unPedido = em.getReference(unPedido.getClass(), unPedido.getId());
+                producto.setUnPedido(unPedido);
             }
-            List<Pedido> attachedPedidos = new ArrayList<Pedido>();
-            for (Pedido pedidosPedidoToAttach : producto.getPedidos()) {
-                pedidosPedidoToAttach = em.getReference(pedidosPedidoToAttach.getClass(), pedidosPedidoToAttach.getId());
-                attachedPedidos.add(pedidosPedidoToAttach);
+            Barista unBarista = producto.getUnBarista();
+            if (unBarista != null) {
+                unBarista = em.getReference(unBarista.getClass(), unBarista.getId());
+                producto.setUnBarista(unBarista);
             }
-            producto.setPedidos(attachedPedidos);
             em.persist(producto);
-            if (barista != null) {
-                barista.getProductos().add(producto);
-                barista = em.merge(barista);
+            if (unPedido != null) {
+                unPedido.getProductos().add(producto);
+                unPedido = em.merge(unPedido);
             }
-            for (Pedido pedidosPedido : producto.getPedidos()) {
-                pedidosPedido.getProductos().add(producto);
-                pedidosPedido = em.merge(pedidosPedido);
+            if (unBarista != null) {
+                unBarista.getProductos().add(producto);
+                unBarista = em.merge(unBarista);
             }
             em.getTransaction().commit();
         } finally {
@@ -81,41 +76,34 @@ public class ProductoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Producto persistentProducto = em.find(Producto.class, producto.getId());
-            Barista baristaOld = persistentProducto.getBarista();
-            Barista baristaNew = producto.getBarista();
-            List<Pedido> pedidosOld = persistentProducto.getPedidos();
-            List<Pedido> pedidosNew = producto.getPedidos();
-            if (baristaNew != null) {
-                baristaNew = em.getReference(baristaNew.getClass(), baristaNew.getId());
-                producto.setBarista(baristaNew);
+            Pedido unPedidoOld = persistentProducto.getUnPedido();
+            Pedido unPedidoNew = producto.getUnPedido();
+            Barista unBaristaOld = persistentProducto.getUnBarista();
+            Barista unBaristaNew = producto.getUnBarista();
+            if (unPedidoNew != null) {
+                unPedidoNew = em.getReference(unPedidoNew.getClass(), unPedidoNew.getId());
+                producto.setUnPedido(unPedidoNew);
             }
-            List<Pedido> attachedPedidosNew = new ArrayList<Pedido>();
-            for (Pedido pedidosNewPedidoToAttach : pedidosNew) {
-                pedidosNewPedidoToAttach = em.getReference(pedidosNewPedidoToAttach.getClass(), pedidosNewPedidoToAttach.getId());
-                attachedPedidosNew.add(pedidosNewPedidoToAttach);
+            if (unBaristaNew != null) {
+                unBaristaNew = em.getReference(unBaristaNew.getClass(), unBaristaNew.getId());
+                producto.setUnBarista(unBaristaNew);
             }
-            pedidosNew = attachedPedidosNew;
-            producto.setPedidos(pedidosNew);
             producto = em.merge(producto);
-            if (baristaOld != null && !baristaOld.equals(baristaNew)) {
-                baristaOld.getProductos().remove(producto);
-                baristaOld = em.merge(baristaOld);
+            if (unPedidoOld != null && !unPedidoOld.equals(unPedidoNew)) {
+                unPedidoOld.getProductos().remove(producto);
+                unPedidoOld = em.merge(unPedidoOld);
             }
-            if (baristaNew != null && !baristaNew.equals(baristaOld)) {
-                baristaNew.getProductos().add(producto);
-                baristaNew = em.merge(baristaNew);
+            if (unPedidoNew != null && !unPedidoNew.equals(unPedidoOld)) {
+                unPedidoNew.getProductos().add(producto);
+                unPedidoNew = em.merge(unPedidoNew);
             }
-            for (Pedido pedidosOldPedido : pedidosOld) {
-                if (!pedidosNew.contains(pedidosOldPedido)) {
-                    pedidosOldPedido.getProductos().remove(producto);
-                    pedidosOldPedido = em.merge(pedidosOldPedido);
-                }
+            if (unBaristaOld != null && !unBaristaOld.equals(unBaristaNew)) {
+                unBaristaOld.getProductos().remove(producto);
+                unBaristaOld = em.merge(unBaristaOld);
             }
-            for (Pedido pedidosNewPedido : pedidosNew) {
-                if (!pedidosOld.contains(pedidosNewPedido)) {
-                    pedidosNewPedido.getProductos().add(producto);
-                    pedidosNewPedido = em.merge(pedidosNewPedido);
-                }
+            if (unBaristaNew != null && !unBaristaNew.equals(unBaristaOld)) {
+                unBaristaNew.getProductos().add(producto);
+                unBaristaNew = em.merge(unBaristaNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -146,15 +134,15 @@ public class ProductoJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The producto with id " + id + " no longer exists.", enfe);
             }
-            Barista barista = producto.getBarista();
-            if (barista != null) {
-                barista.getProductos().remove(producto);
-                barista = em.merge(barista);
+            Pedido unPedido = producto.getUnPedido();
+            if (unPedido != null) {
+                unPedido.getProductos().remove(producto);
+                unPedido = em.merge(unPedido);
             }
-            List<Pedido> pedidos = producto.getPedidos();
-            for (Pedido pedidosPedido : pedidos) {
-                pedidosPedido.getProductos().remove(producto);
-                pedidosPedido = em.merge(pedidosPedido);
+            Barista unBarista = producto.getUnBarista();
+            if (unBarista != null) {
+                unBarista.getProductos().remove(producto);
+                unBarista = em.merge(unBarista);
             }
             em.remove(producto);
             em.getTransaction().commit();
