@@ -37,11 +37,11 @@
             <%  for (Producto p : productos) {%>
             <p>---------------------------------------------------------------</p>
             <label>Seleccionar éste producto</label>
-            <input type="checkbox">
+            <input type="checkbox" name="id_producto" value="<%=p.getId()%>">
             <br>
             <p>Nombre del Producto: <%=p.getNombre()%></p>
             <p>Contenidos: <%=p.getUnCafe().getNombre()%></p>           
-            <input type="hidden" name="id_producto" value="<%=p.getId()%>">                                           
+                                                    
             <%  }%>
             <p>------------------------------------------------------------------</p>
             <label for="numMesa">Número de mesa: </label>            

@@ -29,7 +29,7 @@
             con el nombre de usuario y contraseña que haya creado el administrador.
              */
             Controlador control = new Controlador();
-            if (control.comprobarRolExistente()) {%>
+            if (!control.comprobarRolExistente()) {%>
         <form action="svLogin" method="POST">
             <fieldset>
                 <legend>Cree su usuario</legend>
@@ -50,7 +50,7 @@
                             verifica si el rol ya existe, si el rol ya existe el metodo retorna el valor false y si no retorna true.                           
                               */
 
-                             if (control.comprobarRolExistente()) { %>
+                             if (!control.comprobarRolExistente()) { %>
                         <option>Administrador</option>                    
                         <%}%>
 

@@ -125,10 +125,10 @@ public class Controlador {
 
         for (Usuario u : usuarios) {
             if (u.getRol().equals("Administrador")) {
-                elRolYaExiste = false;
+                elRolYaExiste = true;
              
             } else {
-                elRolYaExiste = true;
+                elRolYaExiste = false;
             }
         }
         return elRolYaExiste;

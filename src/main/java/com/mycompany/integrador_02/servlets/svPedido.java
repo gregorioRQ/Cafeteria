@@ -45,16 +45,16 @@ public class svPedido extends HttpServlet {
         if(accion.equals("agregar")){
         
          String[] arregloProductos = request.getParameterValues("id_producto");
-         Pedido pedido = new Pedido();  
-         control.crearPedido(pedido);
-         List<Producto> productos = pedido.getProductos();
+        
+         List<Producto> productos = new ArrayList();
          for(String p : arregloProductos){
              int id_producto = Integer.parseInt(p);
               Producto productoEncontrado = control.buscarProducto(id_producto);
               productos.add(productoEncontrado );              
          }
         
-             
+              Pedido pedido = new Pedido();  
+         
             
              pedido.setProductos(productos);
             int numeroDeMesa = Integer.parseInt(request.getParameter("numeroDeMesa"));
@@ -64,7 +64,7 @@ public class svPedido extends HttpServlet {
             Camarero camarero = usu.getUnCamarero();
             pedido.setFueAtendido(false);
             pedido.setUnCamarero(camarero);
-            control.editarPedido(pedido);
+           control.crearPedido(pedido);
             
             response.sendRedirect("index.jsp");
         }else if(accion.equals("eliminar")){
