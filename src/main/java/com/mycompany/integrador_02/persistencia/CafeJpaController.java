@@ -33,6 +33,7 @@ public class CafeJpaController implements Serializable {
         emf = Persistence.createEntityManagerFactory("int02JPAPU");
     }
 
+    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }

@@ -8,8 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 
 @Entity
@@ -19,7 +20,12 @@ public class Pedido implements Serializable {
     private int id;
     private int numMesa;
     private boolean fueAtendido;
-    @OneToMany(mappedBy="unPedido")
+    @ManyToMany
+    @JoinTable(
+    name = "Pedido_Producto", 
+    joinColumns = { @JoinColumn(name = "pedido_id") }, 
+    inverseJoinColumns = { @JoinColumn(name = "producto_id") }
+    )
     private List<Producto> productos;
     @ManyToOne
     @JoinColumn(name="fk_camarero")
@@ -37,7 +43,6 @@ public class Pedido implements Serializable {
     }
 
     
-
     public Camarero getUnCamarero() {
         return unCamarero;
     }

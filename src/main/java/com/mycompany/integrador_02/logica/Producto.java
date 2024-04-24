@@ -2,11 +2,13 @@
 package com.mycompany.integrador_02.logica;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -20,9 +22,8 @@ public class Producto implements Serializable {
     private String precio;
     private boolean estaDisponible;
     private String categoria;
-    @ManyToOne
-    @JoinColumn(name="fk_pedidos")
-    private Pedido unPedido;
+    @ManyToMany(mappedBy="productos")
+    private List<Pedido> pedidos;
     @ManyToOne
     @JoinColumn(name ="fk_barista")
     private Barista unBarista;
@@ -32,17 +33,19 @@ public class Producto implements Serializable {
     public Producto() {
     }
 
-    public Producto(int id, String nombre, String descripcion, String precio, boolean estaDisponible, String categoria, Pedido unPedido, Barista unBarista, Cafe unCafe) {
+    public Producto(int id, String nombre, String descripcion, String precio, boolean estaDisponible, String categoria, List<Pedido> pedidos, Barista unBarista, Cafe unCafe) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.estaDisponible = estaDisponible;
         this.categoria = categoria;
-        this.unPedido = unPedido;
+        this.pedidos = pedidos;
         this.unBarista = unBarista;
         this.unCafe = unCafe;
     }
+
+ 
 
     public Cafe getUnCafe() {
         return unCafe;
@@ -52,15 +55,14 @@ public class Producto implements Serializable {
         this.unCafe = unCafe;
     }
 
-  
-
-    public Pedido getUnPedido() {
-        return unPedido;
+    public List<Pedido> getPedidos() {
+        return pedidos;
     }
 
-    public void setUnPedido(Pedido unPedido) {
-        this.unPedido = unPedido;
+    public void setPedidos(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
     }
+
 
     public Barista getUnBarista() {
         return unBarista;

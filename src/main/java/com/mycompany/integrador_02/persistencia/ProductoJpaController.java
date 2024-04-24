@@ -10,10 +10,11 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.mycompany.integrador_02.logica.Cafe;
-import com.mycompany.integrador_02.logica.Pedido;
 import com.mycompany.integrador_02.logica.Barista;
+import com.mycompany.integrador_02.logica.Pedido;
 import com.mycompany.integrador_02.logica.Producto;
 import com.mycompany.integrador_02.persistencia.exceptions.NonexistentEntityException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -30,16 +31,19 @@ public class ProductoJpaController implements Serializable {
     }
     private EntityManagerFactory emf = null;
 
-    public ProductoJpaController() {
-        emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    public ProductoJpaController() {
+        emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+    
+
     public void create(Producto producto) {
+        if (producto.getPedidos() == null) {
+            producto.setPedidos(new ArrayList<Pedido>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -49,16 +53,17 @@ public class ProductoJpaController implements Serializable {
                 unCafe = em.getReference(unCafe.getClass(), unCafe.getId());
                 producto.setUnCafe(unCafe);
             }
-            Pedido unPedido = producto.getUnPedido();
-            if (unPedido != null) {
-                unPedido = em.getReference(unPedido.getClass(), unPedido.getId());
-                producto.setUnPedido(unPedido);
-            }
             Barista unBarista = producto.getUnBarista();
             if (unBarista != null) {
                 unBarista = em.getReference(unBarista.getClass(), unBarista.getId());
                 producto.setUnBarista(unBarista);
             }
+            List<Pedido> attachedPedidos = new ArrayList<Pedido>();
+            for (Pedido pedidosPedidoToAttach : producto.getPedidos()) {
+                pedidosPedidoToAttach = em.getReference(pedidosPedidoToAttach.getClass(), pedidosPedidoToAttach.getId());
+                attachedPedidos.add(pedidosPedidoToAttach);
+            }
+            producto.setPedidos(attachedPedidos);
             em.persist(producto);
             if (unCafe != null) {
                 Producto oldUnProductoOfUnCafe = unCafe.getUnProducto();
@@ -69,13 +74,13 @@ public class ProductoJpaController implements Serializable {
                 unCafe.setUnProducto(producto);
                 unCafe = em.merge(unCafe);
             }
-            if (unPedido != null) {
-                unPedido.getProductos().add(producto);
-                unPedido = em.merge(unPedido);
-            }
             if (unBarista != null) {
                 unBarista.getProductos().add(producto);
                 unBarista = em.merge(unBarista);
+            }
+            for (Pedido pedidosPedido : producto.getPedidos()) {
+                pedidosPedido.getProductos().add(producto);
+                pedidosPedido = em.merge(pedidosPedido);
             }
             em.getTransaction().commit();
         } finally {
@@ -93,22 +98,25 @@ public class ProductoJpaController implements Serializable {
             Producto persistentProducto = em.find(Producto.class, producto.getId());
             Cafe unCafeOld = persistentProducto.getUnCafe();
             Cafe unCafeNew = producto.getUnCafe();
-            Pedido unPedidoOld = persistentProducto.getUnPedido();
-            Pedido unPedidoNew = producto.getUnPedido();
             Barista unBaristaOld = persistentProducto.getUnBarista();
             Barista unBaristaNew = producto.getUnBarista();
+            List<Pedido> pedidosOld = persistentProducto.getPedidos();
+            List<Pedido> pedidosNew = producto.getPedidos();
             if (unCafeNew != null) {
                 unCafeNew = em.getReference(unCafeNew.getClass(), unCafeNew.getId());
                 producto.setUnCafe(unCafeNew);
-            }
-            if (unPedidoNew != null) {
-                unPedidoNew = em.getReference(unPedidoNew.getClass(), unPedidoNew.getId());
-                producto.setUnPedido(unPedidoNew);
             }
             if (unBaristaNew != null) {
                 unBaristaNew = em.getReference(unBaristaNew.getClass(), unBaristaNew.getId());
                 producto.setUnBarista(unBaristaNew);
             }
+            List<Pedido> attachedPedidosNew = new ArrayList<Pedido>();
+            for (Pedido pedidosNewPedidoToAttach : pedidosNew) {
+                pedidosNewPedidoToAttach = em.getReference(pedidosNewPedidoToAttach.getClass(), pedidosNewPedidoToAttach.getId());
+                attachedPedidosNew.add(pedidosNewPedidoToAttach);
+            }
+            pedidosNew = attachedPedidosNew;
+            producto.setPedidos(pedidosNew);
             producto = em.merge(producto);
             if (unCafeOld != null && !unCafeOld.equals(unCafeNew)) {
                 unCafeOld.setUnProducto(null);
@@ -123,14 +131,6 @@ public class ProductoJpaController implements Serializable {
                 unCafeNew.setUnProducto(producto);
                 unCafeNew = em.merge(unCafeNew);
             }
-            if (unPedidoOld != null && !unPedidoOld.equals(unPedidoNew)) {
-                unPedidoOld.getProductos().remove(producto);
-                unPedidoOld = em.merge(unPedidoOld);
-            }
-            if (unPedidoNew != null && !unPedidoNew.equals(unPedidoOld)) {
-                unPedidoNew.getProductos().add(producto);
-                unPedidoNew = em.merge(unPedidoNew);
-            }
             if (unBaristaOld != null && !unBaristaOld.equals(unBaristaNew)) {
                 unBaristaOld.getProductos().remove(producto);
                 unBaristaOld = em.merge(unBaristaOld);
@@ -138,6 +138,18 @@ public class ProductoJpaController implements Serializable {
             if (unBaristaNew != null && !unBaristaNew.equals(unBaristaOld)) {
                 unBaristaNew.getProductos().add(producto);
                 unBaristaNew = em.merge(unBaristaNew);
+            }
+            for (Pedido pedidosOldPedido : pedidosOld) {
+                if (!pedidosNew.contains(pedidosOldPedido)) {
+                    pedidosOldPedido.getProductos().remove(producto);
+                    pedidosOldPedido = em.merge(pedidosOldPedido);
+                }
+            }
+            for (Pedido pedidosNewPedido : pedidosNew) {
+                if (!pedidosOld.contains(pedidosNewPedido)) {
+                    pedidosNewPedido.getProductos().add(producto);
+                    pedidosNewPedido = em.merge(pedidosNewPedido);
+                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -173,15 +185,15 @@ public class ProductoJpaController implements Serializable {
                 unCafe.setUnProducto(null);
                 unCafe = em.merge(unCafe);
             }
-            Pedido unPedido = producto.getUnPedido();
-            if (unPedido != null) {
-                unPedido.getProductos().remove(producto);
-                unPedido = em.merge(unPedido);
-            }
             Barista unBarista = producto.getUnBarista();
             if (unBarista != null) {
                 unBarista.getProductos().remove(producto);
                 unBarista = em.merge(unBarista);
+            }
+            List<Pedido> pedidos = producto.getPedidos();
+            for (Pedido pedidosPedido : pedidos) {
+                pedidosPedido.getProductos().remove(producto);
+                pedidosPedido = em.merge(pedidosPedido);
             }
             em.remove(producto);
             em.getTransaction().commit();
