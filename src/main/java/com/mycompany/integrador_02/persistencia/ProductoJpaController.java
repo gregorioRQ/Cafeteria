@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import com.mycompany.integrador_02.logica.Cafe;
 import com.mycompany.integrador_02.logica.Pedido;
 import com.mycompany.integrador_02.logica.Barista;
 import com.mycompany.integrador_02.logica.Producto;
@@ -43,6 +44,11 @@ public class ProductoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Cafe unCafe = producto.getUnCafe();
+            if (unCafe != null) {
+                unCafe = em.getReference(unCafe.getClass(), unCafe.getId());
+                producto.setUnCafe(unCafe);
+            }
             Pedido unPedido = producto.getUnPedido();
             if (unPedido != null) {
                 unPedido = em.getReference(unPedido.getClass(), unPedido.getId());
@@ -54,6 +60,15 @@ public class ProductoJpaController implements Serializable {
                 producto.setUnBarista(unBarista);
             }
             em.persist(producto);
+            if (unCafe != null) {
+                Producto oldUnProductoOfUnCafe = unCafe.getUnProducto();
+                if (oldUnProductoOfUnCafe != null) {
+                    oldUnProductoOfUnCafe.setUnCafe(null);
+                    oldUnProductoOfUnCafe = em.merge(oldUnProductoOfUnCafe);
+                }
+                unCafe.setUnProducto(producto);
+                unCafe = em.merge(unCafe);
+            }
             if (unPedido != null) {
                 unPedido.getProductos().add(producto);
                 unPedido = em.merge(unPedido);
@@ -76,10 +91,16 @@ public class ProductoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Producto persistentProducto = em.find(Producto.class, producto.getId());
+            Cafe unCafeOld = persistentProducto.getUnCafe();
+            Cafe unCafeNew = producto.getUnCafe();
             Pedido unPedidoOld = persistentProducto.getUnPedido();
             Pedido unPedidoNew = producto.getUnPedido();
             Barista unBaristaOld = persistentProducto.getUnBarista();
             Barista unBaristaNew = producto.getUnBarista();
+            if (unCafeNew != null) {
+                unCafeNew = em.getReference(unCafeNew.getClass(), unCafeNew.getId());
+                producto.setUnCafe(unCafeNew);
+            }
             if (unPedidoNew != null) {
                 unPedidoNew = em.getReference(unPedidoNew.getClass(), unPedidoNew.getId());
                 producto.setUnPedido(unPedidoNew);
@@ -89,6 +110,19 @@ public class ProductoJpaController implements Serializable {
                 producto.setUnBarista(unBaristaNew);
             }
             producto = em.merge(producto);
+            if (unCafeOld != null && !unCafeOld.equals(unCafeNew)) {
+                unCafeOld.setUnProducto(null);
+                unCafeOld = em.merge(unCafeOld);
+            }
+            if (unCafeNew != null && !unCafeNew.equals(unCafeOld)) {
+                Producto oldUnProductoOfUnCafe = unCafeNew.getUnProducto();
+                if (oldUnProductoOfUnCafe != null) {
+                    oldUnProductoOfUnCafe.setUnCafe(null);
+                    oldUnProductoOfUnCafe = em.merge(oldUnProductoOfUnCafe);
+                }
+                unCafeNew.setUnProducto(producto);
+                unCafeNew = em.merge(unCafeNew);
+            }
             if (unPedidoOld != null && !unPedidoOld.equals(unPedidoNew)) {
                 unPedidoOld.getProductos().remove(producto);
                 unPedidoOld = em.merge(unPedidoOld);
@@ -133,6 +167,11 @@ public class ProductoJpaController implements Serializable {
                 producto.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The producto with id " + id + " no longer exists.", enfe);
+            }
+            Cafe unCafe = producto.getUnCafe();
+            if (unCafe != null) {
+                unCafe.setUnProducto(null);
+                unCafe = em.merge(unCafe);
             }
             Pedido unPedido = producto.getUnPedido();
             if (unPedido != null) {

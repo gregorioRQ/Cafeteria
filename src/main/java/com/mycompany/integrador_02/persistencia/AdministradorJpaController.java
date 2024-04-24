@@ -28,14 +28,14 @@ public class AdministradorJpaController implements Serializable {
     }
     private EntityManagerFactory emf = null;
 
-    public AdministradorJpaController() {
-        emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+
+    public AdministradorJpaController() {
+        emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+    
 
     public void create(Administrador administrador) {
         EntityManager em = null;

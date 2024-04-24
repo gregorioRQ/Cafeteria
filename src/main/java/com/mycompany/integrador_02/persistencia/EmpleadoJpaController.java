@@ -27,13 +27,12 @@ public class EmpleadoJpaController implements Serializable {
     }
     private EntityManagerFactory emf = null;
 
-    public EmpleadoJpaController() {
-        emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+
+    public EmpleadoJpaController() {
+        emf = Persistence.createEntityManagerFactory("int02JPAPU");
     }
 
     public void create(Empleado empleado) {

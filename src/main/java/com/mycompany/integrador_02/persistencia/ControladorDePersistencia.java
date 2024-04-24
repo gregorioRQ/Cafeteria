@@ -3,6 +3,7 @@ package com.mycompany.integrador_02.persistencia;
 
 import com.mycompany.integrador_02.logica.Administrador;
 import com.mycompany.integrador_02.logica.Barista;
+import com.mycompany.integrador_02.logica.Cafe;
 import com.mycompany.integrador_02.logica.Camarero;
 import com.mycompany.integrador_02.logica.Pedido;
 import com.mycompany.integrador_02.logica.Producto;
@@ -21,6 +22,7 @@ public class ControladorDePersistencia {
     UsuarioJpaController usjpa = new UsuarioJpaController();
     AdministradorJpaController adjpa = new AdministradorJpaController();
     PedidoJpaController pedjpa = new PedidoJpaController();
+    CafeJpaController cafjpa = new CafeJpaController();
 
     List<Usuario> trarUsuarios() {
         List<Usuario>usuarios = usjpa.findUsuarioEntities();
@@ -64,6 +66,14 @@ public class ControladorDePersistencia {
     void editarUsuario(Usuario usu) {
         try {
             usjpa.edit(usu);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void editarProducto(Producto p){
+        try {
+            projpa.edit(p);
         } catch (Exception ex) {
             Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -145,6 +155,31 @@ public class ControladorDePersistencia {
         return bjpa.findBarista(i);
     }
 
+    void crearCafe(Cafe cafe) {
+        cafjpa.create(cafe);
+    }
 
-    
+    void editarCafe(Cafe c) {
+        try {
+            cafjpa.edit(c);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Cafe buscarCafe(int idCafe) {
+        return cafjpa.findCafe(idCafe);
+    }
+
+    public List<Cafe> buscarTodosLosCafes(){
+        return cafjpa.findCafeEntities();
+    }
+
+    public void eliminarCafe(int idCafe){
+        try {
+            cafjpa.destroy(idCafe);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

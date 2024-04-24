@@ -12,9 +12,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.mycompany.integrador_02.logica.Usuario;
 import com.mycompany.integrador_02.logica.Producto;
-import com.mycompany.integrador_02.persistencia.exceptions.NonexistentEntityException;
 import java.util.ArrayList;
 import java.util.List;
+import com.mycompany.integrador_02.logica.Cafe;
+import com.mycompany.integrador_02.persistencia.exceptions.NonexistentEntityException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -33,7 +34,6 @@ public class BaristaJpaController implements Serializable {
         emf = Persistence.createEntityManagerFactory("int02JPAPU");
     }
     
-    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -43,6 +43,9 @@ public class BaristaJpaController implements Serializable {
     public void create(Barista barista) {
         if (barista.getProductos() == null) {
             barista.setProductos(new ArrayList<Producto>());
+        }
+        if (barista.getVariedadesDeCafe() == null) {
+            barista.setVariedadesDeCafe(new ArrayList<Cafe>());
         }
         EntityManager em = null;
         try {
@@ -59,6 +62,12 @@ public class BaristaJpaController implements Serializable {
                 attachedProductos.add(productosProductoToAttach);
             }
             barista.setProductos(attachedProductos);
+            List<Cafe> attachedVariedadesDeCafe = new ArrayList<Cafe>();
+            for (Cafe variedadesDeCafeCafeToAttach : barista.getVariedadesDeCafe()) {
+                variedadesDeCafeCafeToAttach = em.getReference(variedadesDeCafeCafeToAttach.getClass(), variedadesDeCafeCafeToAttach.getId());
+                attachedVariedadesDeCafe.add(variedadesDeCafeCafeToAttach);
+            }
+            barista.setVariedadesDeCafe(attachedVariedadesDeCafe);
             em.persist(barista);
             if (unUsuario != null) {
                 Barista oldUnBaristaOfUnUsuario = unUsuario.getUnBarista();
@@ -76,6 +85,15 @@ public class BaristaJpaController implements Serializable {
                 if (oldUnBaristaOfProductosProducto != null) {
                     oldUnBaristaOfProductosProducto.getProductos().remove(productosProducto);
                     oldUnBaristaOfProductosProducto = em.merge(oldUnBaristaOfProductosProducto);
+                }
+            }
+            for (Cafe variedadesDeCafeCafe : barista.getVariedadesDeCafe()) {
+                Barista oldUnBaristaOfVariedadesDeCafeCafe = variedadesDeCafeCafe.getUnBarista();
+                variedadesDeCafeCafe.setUnBarista(barista);
+                variedadesDeCafeCafe = em.merge(variedadesDeCafeCafe);
+                if (oldUnBaristaOfVariedadesDeCafeCafe != null) {
+                    oldUnBaristaOfVariedadesDeCafeCafe.getVariedadesDeCafe().remove(variedadesDeCafeCafe);
+                    oldUnBaristaOfVariedadesDeCafeCafe = em.merge(oldUnBaristaOfVariedadesDeCafeCafe);
                 }
             }
             em.getTransaction().commit();
@@ -96,6 +114,8 @@ public class BaristaJpaController implements Serializable {
             Usuario unUsuarioNew = barista.getUnUsuario();
             List<Producto> productosOld = persistentBarista.getProductos();
             List<Producto> productosNew = barista.getProductos();
+            List<Cafe> variedadesDeCafeOld = persistentBarista.getVariedadesDeCafe();
+            List<Cafe> variedadesDeCafeNew = barista.getVariedadesDeCafe();
             if (unUsuarioNew != null) {
                 unUsuarioNew = em.getReference(unUsuarioNew.getClass(), unUsuarioNew.getId());
                 barista.setUnUsuario(unUsuarioNew);
@@ -107,6 +127,13 @@ public class BaristaJpaController implements Serializable {
             }
             productosNew = attachedProductosNew;
             barista.setProductos(productosNew);
+            List<Cafe> attachedVariedadesDeCafeNew = new ArrayList<Cafe>();
+            for (Cafe variedadesDeCafeNewCafeToAttach : variedadesDeCafeNew) {
+                variedadesDeCafeNewCafeToAttach = em.getReference(variedadesDeCafeNewCafeToAttach.getClass(), variedadesDeCafeNewCafeToAttach.getId());
+                attachedVariedadesDeCafeNew.add(variedadesDeCafeNewCafeToAttach);
+            }
+            variedadesDeCafeNew = attachedVariedadesDeCafeNew;
+            barista.setVariedadesDeCafe(variedadesDeCafeNew);
             barista = em.merge(barista);
             if (unUsuarioOld != null && !unUsuarioOld.equals(unUsuarioNew)) {
                 unUsuarioOld.setUnBarista(null);
@@ -135,6 +162,23 @@ public class BaristaJpaController implements Serializable {
                     if (oldUnBaristaOfProductosNewProducto != null && !oldUnBaristaOfProductosNewProducto.equals(barista)) {
                         oldUnBaristaOfProductosNewProducto.getProductos().remove(productosNewProducto);
                         oldUnBaristaOfProductosNewProducto = em.merge(oldUnBaristaOfProductosNewProducto);
+                    }
+                }
+            }
+            for (Cafe variedadesDeCafeOldCafe : variedadesDeCafeOld) {
+                if (!variedadesDeCafeNew.contains(variedadesDeCafeOldCafe)) {
+                    variedadesDeCafeOldCafe.setUnBarista(null);
+                    variedadesDeCafeOldCafe = em.merge(variedadesDeCafeOldCafe);
+                }
+            }
+            for (Cafe variedadesDeCafeNewCafe : variedadesDeCafeNew) {
+                if (!variedadesDeCafeOld.contains(variedadesDeCafeNewCafe)) {
+                    Barista oldUnBaristaOfVariedadesDeCafeNewCafe = variedadesDeCafeNewCafe.getUnBarista();
+                    variedadesDeCafeNewCafe.setUnBarista(barista);
+                    variedadesDeCafeNewCafe = em.merge(variedadesDeCafeNewCafe);
+                    if (oldUnBaristaOfVariedadesDeCafeNewCafe != null && !oldUnBaristaOfVariedadesDeCafeNewCafe.equals(barista)) {
+                        oldUnBaristaOfVariedadesDeCafeNewCafe.getVariedadesDeCafe().remove(variedadesDeCafeNewCafe);
+                        oldUnBaristaOfVariedadesDeCafeNewCafe = em.merge(oldUnBaristaOfVariedadesDeCafeNewCafe);
                     }
                 }
             }
@@ -176,6 +220,11 @@ public class BaristaJpaController implements Serializable {
             for (Producto productosProducto : productos) {
                 productosProducto.setUnBarista(null);
                 productosProducto = em.merge(productosProducto);
+            }
+            List<Cafe> variedadesDeCafe = barista.getVariedadesDeCafe();
+            for (Cafe variedadesDeCafeCafe : variedadesDeCafe) {
+                variedadesDeCafeCafe.setUnBarista(null);
+                variedadesDeCafeCafe = em.merge(variedadesDeCafeCafe);
             }
             em.remove(barista);
             em.getTransaction().commit();

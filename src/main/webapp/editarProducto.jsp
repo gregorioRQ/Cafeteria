@@ -9,12 +9,14 @@
     </head>
     <body>
         <h1>Edite el producto</h1>
-        <% Producto p = (Producto) request.getSession().getAttribute("producto_a_editar"); %>
+        <% Producto p = (Producto) request.getSession().getAttribute("productoEditar"); %>
         <form action="svProducto" method="POST">
                 <fieldset>
                     <legend>Añadir un nuevo producto</legend>
                     <label for="nombre">Nombre del producto</label>
-                    <input type="hidden" value="<%=p.getId()%>" name="id_producto">
+                    <input type="hidden" value="editar" name="accion">
+                    <input type="hidden" value="<%=p.getId()%>" name="idProducto">
+                    <input type="hidden" value="<%=p.getUnCafe().getId()%>" name="idCafe">
                     <input type="text" id="nombre" name="nombre" value="<%=p.getNombre()%>">
                         <br>
                         <label for="descripcion">Añada una descripcion</label>
@@ -26,19 +28,21 @@
                         <label>El producto esta disponible?</label>
                         <label for="si">Si
                         <input type="checkbox" id="si" name="disponible">
-                        </label>
-                        <label for="no">No
-                         <input type="checkbox" id="no" name="disponible">
-                        </label>
+                        
                         <br>
                          <label for="categoria">Categoria</label>
                          <input type="text" id="categoria" name="categoria" value="<%=p.getCategoria()%>">
-                         <br>
-                         <label for="barista">Barista que lo añade</label>
-                         <input type="text" id="barista" name="barista_asignado">
+                         <br>                   
+                    <label for="variedadDeCafe">Variedad de cafe</label>
+                    <input type="text" name="variedadDeCafe" id="variedadDeCafe" value="<%=p.getUnCafe().getNombre()%>">
+                    <label for="decripcionDelCafe">Descripion del cafe</label>
+                    <input type="text" name="descripcionDelCafe" id="descripcionDelCafe" value="<%=p.getDescripcion()%>">
+                    <br>
+                    <label for="barista">Nombre de usuario del barista que se encargara de hacerlo</label>
+                    <input type="text" id="barista" name="nombreDeUsuario" value="<%=p.getUnBarista().getUnUsuario().getNombreUs()%>">
           
                 </fieldset>
-                <button type="submit">Añadir Producto</button>
+                <button type="submit">Guardar</button>
             </form>
 
     </body>

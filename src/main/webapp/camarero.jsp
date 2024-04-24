@@ -14,42 +14,51 @@
         <%
             HttpSession misesion = request.getSession();
             String nombreUs = (String) request.getSession().getAttribute("nombreUs");
-            
-            
+
             if (nombreUs == null) {
                 response.sendRedirect("index.jsp");
             }
-            
+
             Controlador control = new Controlador();
             int idUsu = (Integer) request.getSession().getAttribute("id_usuario");
             //Castea el objeto traido por getAttribute() a una lista.
             List<Producto> productos = control.buscarProductos();
         %>
         <h1>Bienvenido camarero</h1>
-       
+
         <h1>Productos disponibles</h1>
 
-        <%           
+        <%
             //comprueba si la lista no es igual a null para que no ocurra una null pointer exception.
             if (productos != null) { %>  
 
         <form action="svPedido" method="POST">
-                 <fieldset>    
-                   <%  for (Producto p : productos) {%>
-               <input type="checkbox"><%=p.getNombre()%>
-               <br>
-                <input type="hidden" name="id_producto" value="<%=p.getId()%>">                                           
+
+            <%  for (Producto p : productos) {%>
+            <p>---------------------------------------------------------------</p>
+            <label>Seleccionar éste producto</label>
+            <input type="checkbox">
+            <br>
+            <p>Nombre del Producto: <%=p.getNombre()%></p>
+            <p>Contenidos: <%=p.getUnCafe().getNombre()%></p>           
+            <input type="hidden" name="id_producto" value="<%=p.getId()%>">                                           
             <%  }%>
-                   </fieldset>
-                   <input type="hidden" value="agregar" name="accion">
-           <input type="text" name="numeroDeMesa" placeholder="numero de mesa">
-            <input type="hidden" name="idUsu" value="<%=idUsu%>">       
+            <p>------------------------------------------------------------------</p>
+            <label for="numMesa">Número de mesa: </label>            
+            <input type="text" name="numeroDeMesa" id="numMesa">
+            <br>
+            <label for="descripcion">Descripcion: </label>
+            <input type="text" id="descripcion" name="descripcion">
+            <br>
+            <input type="hidden" value="agregar" name="accion">            
+            <input type="hidden" name="idUsu" value="<%=idUsu%>">
+            <br>
             <button type="submit">Ordenar</button>
         </form>
- 
-           <%  } %>
 
-        
+        <%  }%>
+
+
 
         <form action="svCerrarSesion" method="POST">
             <input type="submit" value="Cerrar Sesión">

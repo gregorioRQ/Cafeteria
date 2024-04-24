@@ -57,7 +57,7 @@ public class svLogin extends HttpServlet {
         }else{
             response.sendRedirect("error.jsp");
             }
-        } else if(accion.equals("registrar")){
+        } else if(accion.equals("registro")){
         String nombreUs = request.getParameter("nombreUs");
         String contra = request.getParameter("contrasenia");
         String rol = request.getParameter("rol");

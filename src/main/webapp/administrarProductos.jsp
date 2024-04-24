@@ -32,9 +32,14 @@
                 <input type="hidden" name="idProducto" value="<%=p.getId()%>">
                 <button type="submit">Eliminar producto</button>
             </form>
+            <form action="svProducto" method="GET">
+                <input type="hidden" value="<%=p.getId()%>" name="idProducto">
+                <input type="hidden" value="<%=p.getUnCafe().getId()%>" name="idCafe">
+                <button type="submit">Editar</button>
+            </form>
         </div>  
         <%  }
             }%>
-            <button><a href="administrador.jsp">Volver</a></button>
+        <button><a href="administrador.jsp">Volver</a></button>
     </body>
 </html>

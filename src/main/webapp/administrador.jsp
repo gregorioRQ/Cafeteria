@@ -24,7 +24,7 @@
         <form action="svLogin" method="POST">
             <fieldset>
                 <legend>Datos del nuevo usuario</legend>
-                <input type="hidden" name="accion" value="registrar">
+                <input type="hidden" name="accion" value="registro">
                 <label for="nombreUsu">Nombre de usuario</label>
                 <input type="text" id="nombreUsu" name="nombreUs" required="">
                 <input type="hidden" name="accion" value="registro">
@@ -88,18 +88,10 @@
                     </select>
                     <br>
                     <label for="habilidadArteLatte">Posee habilidad de arte latte?</label>
-                    <input type="checkbox" name="habilidadArteLatte">Si
-                    <input type="checkbox" name="habilidadArteLatte">No
+                    <input type="checkbox" name="habilidadArteLatte" value="si">Si
+                    <input type="checkbox" name="habilidadArteLatte" value="no">No
                     <br>
-                    <label for="variedadesDeCafe">Variedades de Cafe</label>
-                    <input type="checkbox" id="variedadesDeCafe" name="variedadesDeCafe">capu
-                    <input type="checkbox" id="variedadesDeCafe" name="variedadesDeCafe">expreso
-                    <br>
-                    <label for="metodosDeExtraccion">Metodos de extraccion</label>
-                    <input type="checkbox" id="metodosDeExtraccion" name="metodosDeExtraccion">metodo1
-                    <input type="checkbox" id="metodosDeExtraccion" name="metodosDeExtraccion">metodo2
-                    <input type="checkbox" id="metodosDeExtraccion" name="metodosDeExtraccion">metodo3
-                    <br>
+          
                     <label for="nombreUsuario">Asigne el nombre de usuario para el barista</label>
                     <input type="text" name="nombreDeUsuario" id="nombreUsuario">
                 </fieldset>
@@ -202,6 +194,11 @@
                     <br>
                     <label for="categoria">Categoria</label>
                     <input type="text" id="categoria" name="categoria">
+                    <br>                   
+                    <label for="variedadDeCafe">Variedad de cafe</label>
+                    <input type="text" name="variedadDeCafe" id="variedadDeCafe">
+                    <label for="decripcionDelCafe">Descripion del cafe</label>
+                    <input type="text" name="descripcionDelCafe" id="descripcionDelCafe">
                     <br>
                     <label for="barista">Nombre de usuario del barista que se encargara de hacerlo</label>
                     <input type="text" id="barista" name="nombreDeUsuario">

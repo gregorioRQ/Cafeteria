@@ -45,20 +45,20 @@ public class svPedido extends HttpServlet {
         if(accion.equals("agregar")){
         
          String[] arregloProductos = request.getParameterValues("id_producto");
-         List<Producto> productos = new ArrayList<>();
+         Pedido pedido = new Pedido();  
+         control.crearPedido(pedido);
+         List<Producto> productos = pedido.getProductos();
          for(String p : arregloProductos){
              int id_producto = Integer.parseInt(p);
               Producto productoEncontrado = control.buscarProducto(id_producto);
-              productos.add(productoEncontrado ); 
+              productos.add(productoEncontrado );              
          }
         
-            Pedido pedido = new Pedido();
-            control.crearPedido(pedido);
+             
+            
              pedido.setProductos(productos);
             int numeroDeMesa = Integer.parseInt(request.getParameter("numeroDeMesa"));
-            pedido.setNumMesa(numeroDeMesa);
-            
-            
+            pedido.setNumMesa(numeroDeMesa);          
             int id_usuario = Integer.parseInt(request.getParameter("idUsu"));
             Usuario usu = control.buscarUsuario(id_usuario);
             Camarero camarero = usu.getUnCamarero();

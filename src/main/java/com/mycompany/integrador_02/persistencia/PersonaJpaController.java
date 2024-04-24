@@ -27,14 +27,14 @@ public class PersonaJpaController implements Serializable {
     }
     private EntityManagerFactory emf = null;
 
-    public PersonaJpaController() {
-        emf = Persistence.createEntityManagerFactory("int02JPAPU");
-    }
-
-    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+
+    public PersonaJpaController() {
+        emf = Persistence.createEntityManagerFactory("int02JPAPU");
+    }
+    
 
     public void create(Persona persona) {
         EntityManager em = null;

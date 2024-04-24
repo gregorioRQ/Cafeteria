@@ -2,6 +2,7 @@ package com.mycompany.integrador_02.persistencia;
 
 import com.mycompany.integrador_02.logica.Administrador;
 import com.mycompany.integrador_02.logica.Barista;
+import com.mycompany.integrador_02.logica.Cafe;
 import com.mycompany.integrador_02.logica.Camarero;
 import com.mycompany.integrador_02.logica.Pedido;
 import com.mycompany.integrador_02.logica.Producto;
@@ -15,6 +16,14 @@ public class Controlador {
 
     public void crarAdmin(Administrador ad) {
         cp.crearAdmin(ad);
+    }
+    
+    public void editarProducto(Producto p){
+        cp.editarProducto(p);
+    }
+    
+    public void editarCafe(Cafe c){
+        cp.editarCafe(c);
     }
     
     public void crearPedido(Pedido p){
@@ -117,6 +126,7 @@ public class Controlador {
         for (Usuario u : usuarios) {
             if (u.getRol().equals("Administrador")) {
                 elRolYaExiste = false;
+             
             } else {
                 elRolYaExiste = true;
             }
@@ -142,7 +152,7 @@ public class Controlador {
         return idUs;
     }
 
-    public void añadirProducto(String nombre, String descripcion, String precio, String disponibleString, String categoria, String nombreDeUsuario) {  
+    public void añadirProducto(String nombre, String descripcion, String precio, String disponibleString, String categoria, String nombreDeUsuario, String variedadDeCafe, String descripcionDelCafe) {  
        
         boolean disponibleBool = false;
         if(disponibleString.equals("si")){
@@ -151,14 +161,21 @@ public class Controlador {
             disponibleBool = false;
         }
         
-         Barista unBarista = buscarUsuarioPorNombre(nombreDeUsuario).getUnBarista();  
+         Barista unBarista = buscarUsuarioPorNombre(nombreDeUsuario).getUnBarista();
+         
         Producto p = new Producto();
+        Cafe cafe = new Cafe();
+        cafe.setNombre(variedadDeCafe);
+        cafe.setDescripcion(descripcionDelCafe);
+        cafe.setUnBarista(unBarista);
+        p.setUnCafe(cafe);
         p.setNombre(nombre);
         p.setDescripcion(descripcion);
         p.setCategoria(categoria);
         p.setPrecio(precio);
         p.setEstaDisponible(disponibleBool);
         p.setUnBarista(unBarista);
+        cp.crearCafe(cafe);
         cp.crearProducto(p);
     }
 
@@ -215,8 +232,7 @@ public class Controlador {
         barista.setDiasTrabajo(diasDeTrabajo);
         barista.setHorariosTrabajo(horariosDeTrabajo);
         barista.setHabilidadArteLatte(true);
-        barista.setVariedadesDeCafe(variedadesDeCafe);
-        barista.setMetodosDeExtraccion(metodosDeExtraccion);
+        
         barista.setTelefono(telefono);
         barista.setSueldo(salario);
         barista.setUnUsuario(us);
@@ -257,6 +273,10 @@ public class Controlador {
 
     public void eliminarProducto(int idProducto) {
         cp.eliminarProducto(idProducto);
+    }
+
+    public Cafe buscarCafe(int idCafe) {
+        return cp.buscarCafe(idCafe);
     }
 
 }

@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Producto implements Serializable {
@@ -25,12 +26,13 @@ public class Producto implements Serializable {
     @ManyToOne
     @JoinColumn(name ="fk_barista")
     private Barista unBarista;
- 
+    @OneToOne(mappedBy="unProducto")
+    private Cafe unCafe;
 
     public Producto() {
     }
 
-    public Producto(int id, String nombre, String descripcion, String precio, boolean estaDisponible, String categoria, Pedido unPedido, Barista unBarista) {
+    public Producto(int id, String nombre, String descripcion, String precio, boolean estaDisponible, String categoria, Pedido unPedido, Barista unBarista, Cafe unCafe) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -39,7 +41,18 @@ public class Producto implements Serializable {
         this.categoria = categoria;
         this.unPedido = unPedido;
         this.unBarista = unBarista;
+        this.unCafe = unCafe;
     }
+
+    public Cafe getUnCafe() {
+        return unCafe;
+    }
+
+    public void setUnCafe(Cafe unCafe) {
+        this.unCafe = unCafe;
+    }
+
+  
 
     public Pedido getUnPedido() {
         return unPedido;
