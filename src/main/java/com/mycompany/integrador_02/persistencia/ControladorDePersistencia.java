@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 public class ControladorDePersistencia {
     BaristaJpaController bjpa = new BaristaJpaController();
     CamareroJpaController cjpa = new CamareroJpaController();
-    PersonaJpaController perjpa = new PersonaJpaController();
     ProductoJpaController projpa = new ProductoJpaController();
     UsuarioJpaController usjpa = new UsuarioJpaController();
     AdministradorJpaController adjpa = new AdministradorJpaController();

@@ -28,12 +28,11 @@ public class PedidoJpaController implements Serializable {
     public PedidoJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+    private EntityManagerFactory emf = null;
 
     public PedidoJpaController() {
         emf = Persistence.createEntityManagerFactory("int02JPAPU");
     }
-    
-    private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -64,13 +63,8 @@ public class PedidoJpaController implements Serializable {
                 unCamarero = em.merge(unCamarero);
             }
             for (Producto productosProducto : pedido.getProductos()) {
-                Pedido oldUnPedidoOfProductosProducto = productosProducto.getUnPedido();
-                productosProducto.setUnPedido(pedido);
+                productosProducto.getPedidos().add(pedido);
                 productosProducto = em.merge(productosProducto);
-                if (oldUnPedidoOfProductosProducto != null) {
-                    oldUnPedidoOfProductosProducto.getProductos().remove(productosProducto);
-                    oldUnPedidoOfProductosProducto = em.merge(oldUnPedidoOfProductosProducto);
-                }
             }
             em.getTransaction().commit();
         } finally {
@@ -112,19 +106,14 @@ public class PedidoJpaController implements Serializable {
             }
             for (Producto productosOldProducto : productosOld) {
                 if (!productosNew.contains(productosOldProducto)) {
-                    productosOldProducto.setUnPedido(null);
+                    productosOldProducto.getPedidos().remove(pedido);
                     productosOldProducto = em.merge(productosOldProducto);
                 }
             }
             for (Producto productosNewProducto : productosNew) {
                 if (!productosOld.contains(productosNewProducto)) {
-                    Pedido oldUnPedidoOfProductosNewProducto = productosNewProducto.getUnPedido();
-                    productosNewProducto.setUnPedido(pedido);
+                    productosNewProducto.getPedidos().add(pedido);
                     productosNewProducto = em.merge(productosNewProducto);
-                    if (oldUnPedidoOfProductosNewProducto != null && !oldUnPedidoOfProductosNewProducto.equals(pedido)) {
-                        oldUnPedidoOfProductosNewProducto.getProductos().remove(productosNewProducto);
-                        oldUnPedidoOfProductosNewProducto = em.merge(oldUnPedidoOfProductosNewProducto);
-                    }
                 }
             }
             em.getTransaction().commit();
@@ -163,7 +152,7 @@ public class PedidoJpaController implements Serializable {
             }
             List<Producto> productos = pedido.getProductos();
             for (Producto productosProducto : productos) {
-                productosProducto.setUnPedido(null);
+                productosProducto.getPedidos().remove(pedido);
                 productosProducto = em.merge(productosProducto);
             }
             em.remove(pedido);
