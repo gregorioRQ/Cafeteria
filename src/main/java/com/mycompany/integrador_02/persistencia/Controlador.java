@@ -24,16 +24,16 @@ public class Controlador {
     public void crarAdmin(Administrador ad) {
         cp.crearAdmin(ad);
     }
-    
-    public void editarProducto(Producto p){
+
+    public void editarProducto(Producto p) {
         cp.editarProducto(p);
     }
-    
-    public void editarCafe(Cafe c){
+
+    public void editarCafe(Cafe c) {
         cp.editarCafe(c);
     }
-    
-    public void crearPedido(Pedido p){
+
+    public void crearPedido(Pedido p) {
         cp.crearPedido(p);
     }
 
@@ -41,9 +41,10 @@ public class Controlador {
         cp.crearUsuario(us);
     }
 
-    public Camarero buscarCamarero(int id){
+    public Camarero buscarCamarero(int id) {
         return cp.buscarCamarero(id);
     }
+
     public boolean comprobarIngreso(String nombreUs, String contrasenia) {
         boolean ingreso = false;
 
@@ -76,7 +77,6 @@ public class Controlador {
 
         String result = "";
         List<Usuario> usuarios = cp.trarUsuarios();
-        
 
         for (Usuario usu : usuarios) {
             if (usu.getNombreUs() == null) {
@@ -112,11 +112,11 @@ public class Controlador {
 
         if (registro) {
             try {
-                Usuario usu = new Usuario();              
+                Usuario usu = new Usuario();
                 usu.setContrasenia(contra);
                 usu.setNombreUs(nombreUs);
                 usu.setRol(rol);
-               cp.crearUsuario(usu);              
+                cp.crearUsuario(usu);
                 registro = true;
             } catch (Exception e) {
                 System.err.println("------ERROR AL CREAR EL USUARIO " + e.getMessage());
@@ -156,17 +156,17 @@ public class Controlador {
         return idUs;
     }
 
-    public void añadirProducto(String nombre, String descripcion, String precio, String disponibleString, String categoria, String nombreDeUsuario, String variedadDeCafe, String descripcionDelCafe) {  
-       
+    public void añadirProducto(String nombre, String descripcion, String precio, String disponibleString, String categoria, String nombreDeUsuario, String variedadDeCafe, String descripcionDelCafe) {
+
         boolean disponibleBool = false;
-        if(disponibleString.equals("si")){
+        if (disponibleString.equals("si")) {
             disponibleBool = true;
-        }else{
+        } else {
             disponibleBool = false;
         }
-        
-         Barista unBarista = buscarUsuarioPorNombre(nombreDeUsuario).getUnBarista();
-         
+
+        Barista unBarista = buscarUsuarioPorNombre(nombreDeUsuario).getUnBarista();
+
         Producto p = new Producto();
         Cafe cafe = new Cafe();
         cafe.setNombre(variedadDeCafe);
@@ -184,18 +184,18 @@ public class Controlador {
     }
 
     public Producto buscarProducto(int id_producto) {
-       return cp.buscarProducto(id_producto);      
+        return cp.buscarProducto(id_producto);
     }
 
     public List<Producto> buscarProductos() {
-       return cp.buscarProductos();
+        return cp.buscarProductos();
     }
 
     public void editarPedido(Pedido pedido) {
         cp.editarPedido(pedido);
     }
-    
-    public List<Pedido> buscarPedidos(){
+
+    public List<Pedido> buscarPedidos() {
         return cp.buscarPedidos();
     }
 
@@ -204,18 +204,18 @@ public class Controlador {
     }
 
     public void crearCamarero(Camarero camarero) {
-       cp.crearCamarero(camarero);
+        cp.crearCamarero(camarero);
     }
 
     public void eliminarPedido(int idPedido) {
         cp.eliminarPedido(idPedido);
     }
-    
-    public Usuario buscarUsuarioPorNombre(String nombreDeUsuario){
-         List<Usuario> usuarios = cp.trarUsuarios();
+
+    public Usuario buscarUsuarioPorNombre(String nombreDeUsuario) {
+        List<Usuario> usuarios = cp.trarUsuarios();
         Usuario usuarioEncontrado = null;
-        for(Usuario usu: usuarios){
-            if(usu.getNombreUs().equals(nombreDeUsuario)){
+        for (Usuario usu : usuarios) {
+            if (usu.getNombreUs().equals(nombreDeUsuario)) {
                 usuarioEncontrado = usu;
                 break;
             }
@@ -224,20 +224,20 @@ public class Controlador {
     }
 
     public void añadirBarista(String nombre, String apellido, String dni, String genero, String fechaDeIngreso, String diasDeTrabajo, String horariosDeTrabajo, String habilidadArteLatte, String telefono, String salario, String nombreDeUsuario, String fechaNac) {
-             
+
         Boolean habilidadArteLatteBool = false;
-        if(habilidadArteLatte != null){
+        if (habilidadArteLatte != null) {
             habilidadArteLatteBool = true;
         }
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date fecha = null;
         try {
             fecha = formatter.parse(fechaNac);
         } catch (ParseException ex) {
             Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
         Usuario us = buscarUsuarioPorNombre(nombreDeUsuario);
         Barista barista = new Barista();
         barista.setNombre(nombre);
@@ -249,27 +249,37 @@ public class Controlador {
         barista.setDiasTrabajo(diasDeTrabajo);
         barista.setHorariosTrabajo(horariosDeTrabajo);
         barista.setHabilidadArteLatte(habilidadArteLatteBool);
-        
+
         barista.setTelefono(telefono);
         barista.setSueldo(salario);
         barista.setUnUsuario(us);
         cp.crearBarista(barista);
-        
+
     }
 
     public void eliminarBarista(String nombreUsuario) {
-        Usuario us =  buscarUsuarioPorNombre(nombreUsuario);
-        
-       Barista baristaEncontrado =us.getUnBarista();
-       cp.eliminarBarista(baristaEncontrado.getId());
+        Usuario us = buscarUsuarioPorNombre(nombreUsuario);
+
+        Barista baristaEncontrado = us.getUnBarista();
+        cp.eliminarBarista(baristaEncontrado.getId());
     }
 
-    public void crearAñadirCamarero(String nombre, String apellido, String dni, String genero, String fechaDeIngreso, String diasDeTrabajo, String horariosDeTrabajo, String mesasQueAtiende, String zonaDeTrabajo,String telefono, String salario,String nombreDeUsuario) {
+    public void agregarUnCamarero(String nombre, String apellido, String dni, String genero, String fechaDeIngreso, String diasDeTrabajo, String horariosDeTrabajo, String mesasQueAtiende, String zonaDeTrabajo, String telefono, String salario, String nombreDeUsuario, String fechaDeNac) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = null;
+        try {
+            fecha = formatter.parse(fechaDeNac);
+        } catch (ParseException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         Usuario us = buscarUsuarioPorNombre(nombreDeUsuario);
-      Camarero camarero = new Camarero();
+        Camarero camarero = new Camarero();
         camarero.setNombre(nombre);
         camarero.setApellido(apellido);
         camarero.setDni(dni);
+        camarero.setFechNac(fecha);
         camarero.setGenero(genero);
         camarero.setTelefono(telefono);
         camarero.setFechaIngreso(fechaDeIngreso);
@@ -282,10 +292,10 @@ public class Controlador {
         cp.crearCamarero(camarero);
     }
 
-   public void eliminarCamarero(String nombreUsuario) {
-       Camarero camareroEncontrado = buscarUsuarioPorNombre(nombreUsuario).getUnCamarero();
-       cp.eliminarCamarero(camareroEncontrado.getId());
-       
+    public void eliminarCamarero(String nombreUsuario) {
+        Camarero camareroEncontrado = buscarUsuarioPorNombre(nombreUsuario).getUnCamarero();
+        cp.eliminarCamarero(camareroEncontrado.getId());
+
     }
 
     public void eliminarProducto(int idProducto) {
@@ -297,7 +307,7 @@ public class Controlador {
     }
 
     public void editarUnBarista(String nombre, String apellido, String dni, String genero, String fechaDeIngreso, String diasDeTrabajo, String horariosDeTrabajo, String habilidadArteLatte, String salario, String telefono, String fechaNac, int baristaId) {
-         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date fecha = null;
         try {
             fecha = formatter.parse(fechaNac);
@@ -305,7 +315,7 @@ public class Controlador {
             Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
         Boolean habilidadArteLatteBool = false;
-        if(habilidadArteLatte != null){
+        if (habilidadArteLatte != null) {
             habilidadArteLatteBool = true;
         }
         Barista b = cp.buscarBaristaPorId(baristaId);
@@ -321,6 +331,61 @@ public class Controlador {
         b.setTelefono(telefono);
         b.setHabilidadArteLatte(habilidadArteLatteBool);
         cp.editarBarista(b);
+    }
+
+    public void editarUnCamarero(String nombre, String apellido, String dni, String genero, String fechaDeIngreso, String diasDeTrabajo, String horariosDeTrabajo, String mesasQueAtiende, String zonaDeTrabajo, String salario, String telefono, String nombreDeUsuario, String fechaNac, int camareroId) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = null;
+        try {
+            fecha = formatter.parse(fechaNac);
+
+        } catch (ParseException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Camarero camarero = cp.buscarCamarero(camareroId);
+        camarero.setNombre(nombre);
+        camarero.setApellido(apellido);
+        camarero.setDni(dni);
+        camarero.setFechNac(fecha);
+        camarero.setGenero(genero);
+        camarero.setTelefono(telefono);
+        camarero.setFechaIngreso(fechaDeIngreso);
+        camarero.setDiasTrabajo(diasDeTrabajo);
+        camarero.setHorariosTrabajo(horariosDeTrabajo);
+        camarero.setMesasQueAtiende(mesasQueAtiende);
+        camarero.setZonaDeTrabajo(zonaDeTrabajo);
+        camarero.setSueldo(salario);
+
+        cp.editarCamarero(camarero);
+    }
+
+    public void editarUnProducto(String nombre, String descripcion, String precio, String disponibleString, String categoria, String nombreDeUsuario, String variedadDeCafe, String descripcionDelCafe, int idProducto, int idCafe) {
+
+        boolean disponibleBool = false;
+        if (disponibleString.equals("si")) {
+            disponibleBool = true;
+        } else {
+            disponibleBool = false;
+        }
+
+        Producto pro = cp.buscarProducto(idProducto);
+        Cafe cafeEncontrado = cp.buscarCafe(idCafe);
+        Barista baristaEncontrado = buscarUsuarioPorNombre(nombreDeUsuario).getUnBarista();
+        cafeEncontrado.setNombre(variedadDeCafe);
+        cafeEncontrado.setDescripcion(descripcionDelCafe);
+        cafeEncontrado.setUnBarista(baristaEncontrado);
+        pro.setNombre(nombre);
+        pro.setDescripcion(descripcion);
+        pro.setPrecio(precio);
+        pro.setEstaDisponible(disponibleBool);
+        pro.setCategoria(categoria);
+        pro.setUnBarista(baristaEncontrado);
+        pro.setUnCafe(cafeEncontrado);
+
+        cp.editarProducto(pro);
+        cp.editarCafe(cafeEncontrado);
     }
 
 }

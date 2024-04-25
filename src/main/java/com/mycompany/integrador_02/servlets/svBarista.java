@@ -73,7 +73,7 @@ public class svBarista extends HttpServlet {
             String salario = request.getParameter("salario");
             String telefono = request.getParameter("telefono");
             String fechaNac = request.getParameter("fechaNac");
-            System.out.println("----------------------------"+fechaNac);
+           
             control.editarUnBarista(nombre, apellido, dni, genero, fechaDeIngreso, diasDeTrabajo, horariosDeTrabajo, habilidadArteLatte, salario, telefono, fechaNac, baristaId);
             response.sendRedirect("administrador.jsp");
         }

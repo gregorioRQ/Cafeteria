@@ -25,6 +25,7 @@
                     <input type="text" id="dni" name="dni" required="" value="<%= barista.getDni() %>">
                     <br>
                     <label for="fechaNac">Fecha de nacimiento</label>
+                    <p><%= barista.getFechNac() %></p>
                     <input type="date" id="fechaNac" name="fechaNac" required="">
                     <br>
                     <label for="genero">Genero</label>
@@ -36,7 +37,8 @@
                 <fieldset>
                     <legend>Datos secundarios</legend>
                     <label for="fechaIngreso">Fecha en la que ingreso a trabajar</label>
-                    <input type="text" id="fechaIngreso" name="fechaIngreso" required="" value="<%= barista.getFechaIngreso() %>">
+                    <p><%= barista.getFechaIngreso() %></p>
+                    <input type="date" id="fechaIngreso" name="fechaIngreso" required="">
                     <br>
                     <label for="salario">Importe del salario del barista</label>
                     <input type="text" id="salario" name="salario" required="" value="<%= barista.getSueldo() %>">

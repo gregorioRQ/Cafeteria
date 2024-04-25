@@ -65,29 +65,14 @@ public class svProducto extends HttpServlet {
             String nombre = request.getParameter("nombre");
             String descripcion = request.getParameter("descripcion");
             String precio = request.getParameter("precio");
-            Boolean disponible = Boolean.parseBoolean(request.getParameter("disponible"));
+            String disponibleString = request.getParameter("disponible");
             String nombreDeUsuario = request.getParameter("nombreDeUsuario");
             String categoria = request.getParameter("categoria");
             String variedadDeCafe = request.getParameter("variedadDeCafe");
             String descripcionDelCafe = request.getParameter("descripcionDelCafe");
+            control.editarUnProducto(nombre, descripcion, precio, disponibleString, categoria, nombreDeUsuario, variedadDeCafe, descripcionDelCafe, idProducto, idCafe);
             
-            
-            Producto pro = control.buscarProducto(idProducto);
-            Cafe cafeEncontrado = control.buscarCafe(idCafe);
-            Barista baristaEncontrado = control.buscarUsuarioPorNombre(nombreDeUsuario).getUnBarista();
-            cafeEncontrado.setNombre(variedadDeCafe);
-            cafeEncontrado.setDescripcion(descripcionDelCafe);
-            cafeEncontrado.setUnBarista(baristaEncontrado);
-            pro.setNombre(nombre);
-            pro.setDescripcion(descripcion);
-            pro.setPrecio(precio);
-            pro.setEstaDisponible(disponible);
-            pro.setCategoria(categoria);            
-            pro.setUnBarista(baristaEncontrado);
-            pro.setUnCafe(cafeEncontrado);
            
-            control.editarProducto(pro);
-            control.editarCafe(cafeEncontrado);
             response.sendRedirect("administrarProductos.jsp");
         }
     }

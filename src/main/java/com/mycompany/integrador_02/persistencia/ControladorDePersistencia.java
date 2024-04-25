@@ -181,4 +181,12 @@ public class ControladorDePersistencia {
             Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    void editarCamarero(Camarero camarero) {
+        try {
+            cjpa.edit(camarero);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladorDePersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

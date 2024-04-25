@@ -68,7 +68,7 @@
                 <fieldset>
                     <legend>Datos secundarios</legend>
                     <label for="fechaIngreso">Fecha en la que ingreso a trabajar</label>
-                    <input type="text" id="fechaIngreso" name="fechaIngreso" required="">
+                    <input type="date" id="fechaIngreso" name="fechaIngreso" required="">
                     <br>
                     <label for="salario">Importe del salario del barista</label>
                     <input type="text" id="salario" name="salario" required="">
@@ -111,54 +111,46 @@
             <fieldset>
                 <legend>Datos principales</legend>
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre">
+                <input type="text" id="nombre" name="nombre" required="">
                 <input type="hidden" name="accion" value="agregar">
                 <br>
                 <label for="apellido">Apellido</label>
-                <input type="text" id="apellido" name="apellido">
+                <input type="text" id="apellido" name="apellido" required="">
                 <br>
                 <label for="dni">Numero de documento</label>
-                <input type="text" id="dni" name="dni">
+                <input type="text" id="dni" name="dni" required="">
                 <br>
                 <label for="fechaNac">Fecha de nacimiento</label>
-                <input type="date" id="fechaNac" name="fechaNac">
+                <input type="date" id="fechaNac" name="fechaNac" required="">
                 <br>
                 <label for="genero">Genero</label>
-                <input type="text" id="genero" name="genero">
+                <input type="text" id="genero" name="genero" required="">
                 <br>
                 <label for="telefono">Numero de telefono</label>
-                <input type="text" id="telefono" name="telefono">
+                <input type="text" id="telefono" name="telefono" required="">
             </fieldset>
             <fieldset>
                 <legend>Datos secundarios</legend>
                 <label for="fechaIngreso">Fecha en la que ingreso a trabajar</label>
-                <input type="text" id="fechaIngreso" name="fechaIngreso">
+                <input type="date" id="fechaIngreso" name="fechaIngreso" required="">
                 <br>
                 <label for="salario">Importe del salario del camarero</label>
-                <input type="text" id="salario" name="salario">
+                <input type="text" id="salario" name="salario" required="">
                 <br>
-                <label for="diasDeTrabajo">Dias de trabajo</label>
-                <select id="diasDeTrabajo" name="diasDeTrabajo">
-                    <option value="first">text1</option>
-                    <option value="second">text2</option>
-                    <option value="third">text3</option>
-                </select>
+                <label for="diasDeTrabajo">Dias en los que trabaja el camarero</label>
+                <input type="text" name="diasDeTrabajo" id="diasDeTrabajo" required="">
                 <br>
                 <label for="horariosDeTrabajo">Horarios de trabajo.</label>
-                <select id="horariosDeTrabajo" name="horariosDeTrabajo">
-                    <option value="first">text1</option>
-                    <option value="second">text2</option>
-                    <option value="third">text3</option>
-                </select>
+                <input type="text" id="horariosDeTrabajo" name="horariosDeTrabajo" required="">
                 <br>
                 <label for="mesasQueAtiende">Mesas que el camarero atiende</label>
-                <input type="text" id="mesasQueAtiende" name="mesasQueAtiende">
+                <input type="text" id="mesasQueAtiende" name="mesasQueAtiende" required="">
                 <br>
                 <label for="zonaDeTrabajo">La zona del local donde atendera el camarero</label>
-                <input type="text" id="zonaDeTrabajo" name="zonaDeTrabajo">
+                <input type="text" id="zonaDeTrabajo" name="zonaDeTrabajo" required="">
                 <br>              
-                <label for="nombreUsuario">Asigne el nombre de usuario para el camarero</label>
-                <input type="text" name="nombreDeUsuario" id="nombreUsuario">
+                <label for="nombreUsuario">Asigne el usuario para el camarero</label>
+                <input type="text" name="nombreDeUsuario" id="nombreUsuario" required="">
             </fieldset>
             <button type="submit">Añadir Camarero</button>
         </form>
@@ -168,6 +160,15 @@
             <input type="text" name="nombreUsuario" placeholder="nombre de usuario">
             <button type="submit">Eliminar</button>
         </form>
+         <form action="svCamarero" method="GET">
+                <h4>Editar camarero</h4>
+                
+                <label for="nombreDeUsuario">Nombre del usuario del camarero que desea editar </label>
+                <br>
+                <input type="text" name="nombreDeUsuario" id="nombreDeUsuario" required="">
+                <br>
+                <button type="submit">Enviar</button>
+            </form>
 
         <div>
             <h2>Crear un Producto</h2>
