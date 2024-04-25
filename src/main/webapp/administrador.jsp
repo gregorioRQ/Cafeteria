@@ -48,52 +48,42 @@
                     <legend>Datos principales</legend>
                     <input type="hidden" name="accion" value="registrar">
                     <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" name="nombre">
+                    <input type="text" id="nombre" name="nombre" required="">
                     <br>
                     <label for="apellido">Apellido</label>
-                    <input type="text" id="apellido" name="apellido">
+                    <input type="text" id="apellido" name="apellido" required="">
                     <br>
                     <label for="dni">Numero de documento</label>
-                    <input type="text" id="dni" name="dni">
+                    <input type="text" id="dni" name="dni" required="">
                     <br>
                     <label for="fechaNac">Fecha de nacimiento</label>
-                    <input type="date" id="fechaNac" name="fechaNac">
+                    <input type="date" id="fechaNac" name="fechaNac" required="">
                     <br>
                     <label for="genero">Genero</label>
-                    <input type="text" id="genero" name="genero">
+                    <input type="text" id="genero" name="genero" required="">
                     <br>
                     <label for="telefono">Numero de telefono</label>
-                    <input type="text" name="telefono" id="telefono">
+                    <input type="text" name="telefono" id="telefono" required="">
                 </fieldset>
                 <fieldset>
                     <legend>Datos secundarios</legend>
                     <label for="fechaIngreso">Fecha en la que ingreso a trabajar</label>
-                    <input type="text" id="fechaIngreso" name="fechaIngreso">
+                    <input type="text" id="fechaIngreso" name="fechaIngreso" required="">
                     <br>
                     <label for="salario">Importe del salario del barista</label>
-                    <input type="text" id="salario" name="salario">
+                    <input type="text" id="salario" name="salario" required="">
                     <br>
-                    <label for="diasDeTrabajo">Dias de trabajo</label>
-                    <select id="diasDeTrabajo" name="diasDeTrabajo">
-                        <option value="first">text1</option>
-                        <option value="second">text2</option>
-                        <option value="third">text3</option>
-                    </select>
+                    <label for="diasDeTrabajo">Dias de la semana que trabaja</label>
+                    <input type="text" id="diasDeTrabajo" name="diasDeTrabajo" required="">                       
                     <br>
-                    <label for="horariosDeTrabajo">Horarios de trabajo.</label>
-                    <select id="horariosDeTrabajo" name="horariosDeTrabajo">
-                        <option value="first">text1</option>
-                        <option value="second">text2</option>
-                        <option value="third">text3</option>
-                    </select>
+                    <label for="horariosDeTrabajo">Horarios de trabajo (pEj: 10 a 12 pm)</label>
+                    <input type="text" id="horariosDeTrabajo" name="horariosDeTrabajo" required="">                    
                     <br>
                     <label for="habilidadArteLatte">Posee habilidad de arte latte?</label>
-                    <input type="checkbox" name="habilidadArteLatte" value="si">Si
-                    <input type="checkbox" name="habilidadArteLatte" value="no">No
-                    <br>
-          
+                    <input type="checkbox" name="habilidadArteLatte" value="si">(marcar)                 
+                    <br>         
                     <label for="nombreUsuario">Asigne el nombre de usuario para el barista</label>
-                    <input type="text" name="nombreDeUsuario" id="nombreUsuario">
+                    <input type="text" name="nombreDeUsuario" id="nombreUsuario" required="">
                 </fieldset>
                 <button type="submit">Añadir barista</button>
             </form>
@@ -103,6 +93,16 @@
                 <input type="hidden" name="accion" value="eliminar">
                 <input type="text" name="nombreUsuario" placeholder="nombre de usuario">
                 <button type="submit">Eliminar</button>
+            </form>
+            
+            <form action="svBarista" method="GET">
+                <h4>Editar barista</h4>
+                <input type="hidden" name="accion" value="editar">
+                <label for="nombreDeUsuario">Nombre del usuario del barista que desea editar </label>
+                <br>
+                <input type="text" name="nombreDeUsuario" id="nombreDeUsuario" required="">
+                <br>
+                <button type="submit">Enviar</button>
             </form>
         </div>
 

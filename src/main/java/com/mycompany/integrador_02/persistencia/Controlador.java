@@ -7,8 +7,15 @@ import com.mycompany.integrador_02.logica.Camarero;
 import com.mycompany.integrador_02.logica.Pedido;
 import com.mycompany.integrador_02.logica.Producto;
 import com.mycompany.integrador_02.logica.Usuario;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Controlador {
 
@@ -120,14 +127,11 @@ public class Controlador {
     }
 
     public boolean comprobarRolExistente() {
-        boolean elRolYaExiste = false;
+        boolean elRolYaExiste = true;
         List<Usuario> usuarios = cp.trarUsuarios();
 
         for (Usuario u : usuarios) {
             if (u.getRol().equals("Administrador")) {
-                elRolYaExiste = true;
-             
-            } else {
                 elRolYaExiste = false;
             }
         }
@@ -219,8 +223,20 @@ public class Controlador {
         return usuarioEncontrado;
     }
 
-    public void añadirBarista(String nombre, String apellido, String dni, String genero, String fechaDeIngreso, String diasDeTrabajo, String horariosDeTrabajo, String habilidadArteLatte, String variedadesDeCafe, String metodosDeExtraccion,String telefono, String salario, String nombreDeUsuario) {
-      
+    public void añadirBarista(String nombre, String apellido, String dni, String genero, String fechaDeIngreso, String diasDeTrabajo, String horariosDeTrabajo, String habilidadArteLatte, String telefono, String salario, String nombreDeUsuario, String fechaNac) {
+             
+        Boolean habilidadArteLatteBool = false;
+        if(habilidadArteLatte != null){
+            habilidadArteLatteBool = true;
+        }
+        
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date fecha = null;
+        try {
+            fecha = formatter.parse(fechaNac);
+        } catch (ParseException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
        
         Usuario us = buscarUsuarioPorNombre(nombreDeUsuario);
         Barista barista = new Barista();
@@ -228,10 +244,11 @@ public class Controlador {
         barista.setApellido(apellido);
         barista.setDni(dni);
         barista.setGenero(genero);
+        barista.setFechNac(fecha);
         barista.setFechaIngreso(fechaDeIngreso);
         barista.setDiasTrabajo(diasDeTrabajo);
         barista.setHorariosTrabajo(horariosDeTrabajo);
-        barista.setHabilidadArteLatte(true);
+        barista.setHabilidadArteLatte(habilidadArteLatteBool);
         
         barista.setTelefono(telefono);
         barista.setSueldo(salario);
@@ -277,6 +294,33 @@ public class Controlador {
 
     public Cafe buscarCafe(int idCafe) {
         return cp.buscarCafe(idCafe);
+    }
+
+    public void editarUnBarista(String nombre, String apellido, String dni, String genero, String fechaDeIngreso, String diasDeTrabajo, String horariosDeTrabajo, String habilidadArteLatte, String salario, String telefono, String fechaNac, int baristaId) {
+         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date fecha = null;
+        try {
+            fecha = formatter.parse(fechaNac);
+        } catch (ParseException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Boolean habilidadArteLatteBool = false;
+        if(habilidadArteLatte != null){
+            habilidadArteLatteBool = true;
+        }
+        Barista b = cp.buscarBaristaPorId(baristaId);
+        b.setNombre(nombre);
+        b.setApellido(apellido);
+        b.setDni(dni);
+        b.setGenero(genero);
+        b.setFechNac(fecha);
+        b.setFechaIngreso(fechaDeIngreso);
+        b.setDiasTrabajo(diasDeTrabajo);
+        b.setHorariosTrabajo(horariosDeTrabajo);
+        b.setSueldo(salario);
+        b.setTelefono(telefono);
+        b.setHabilidadArteLatte(habilidadArteLatteBool);
+        cp.editarBarista(b);
     }
 
 }
