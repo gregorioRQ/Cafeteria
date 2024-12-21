@@ -1,7 +1,7 @@
-# Integrador 02
+# Cafeteria
 
 ## Descripción
-Este proyecto es una aplicación Java web que utiliza diversas tecnologías para la persistencia de datos y la compilación. Está diseñado para demostrar la integración de JPA, MySQL, y otras herramientas.
+Una aplicación Java web que implementa el uso de jsp, servlets y relaciones entre tablas
 
 ## Tecnologías Utilizadas
 - **EclipseLink (Java Persistence API)**: Para la gestión de la persistencia de datos.
